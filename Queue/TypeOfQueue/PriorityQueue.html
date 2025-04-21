@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Queue Visualization with Linked List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: #4a90e2;
+      --secondary: #50e3c2;
+      --bg: #f5f7fa;
+      --text: #333;
+      --error: #e94e77;
+      --highlight: #f8e71c;
+      --code-bg: #272822;
+      --code-text: #f8f8f2;
+      --code-highlight-bg: rgba(248, 231, 28, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    #content {
+      display: grid;
+      grid-template-columns: 7fr 3fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "queue code"
+        "log   code";
+      gap: 10px;
+      height: calc(100vh - 40px);
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    #controls input {
+      flex: 1;
+      min-width: 150px;
+      padding: 8px 12px;
+      border: 2px solid var(--primary);
+      border-radius: 4px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    #controls input:focus {
+      border-color: var(--secondary);
+    }
+
+    #controls button {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background: var(--primary);
+      color: white;
+      transition: background 0.3s;
+    }
+
+    #controls button:hover {
+      background: var(--secondary);
+    }
+
+    #controls button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    #controls #complexity {
+      margin-left: auto;
+      padding: 6px 12px;
+      background: white;
+      border-left: 4px solid var(--secondary);
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #codeBlock {
+      grid-area: code;
+      margin: 0;
+      padding: 10px;
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-family: 'Courier New', monospace;
+      border-radius: 4px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    #codeBlock code .code-line {
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 2px 0;
+      transition: background-color 0.3s;
+    }
+
+    #codeBlock code .code-line.highlight {
+      background-color: var(--code-highlight-bg);
+    }
+
+    #queue {
+      grid-area: queue;
+      display: flex;
+      align-items: center;
+      padding: 40px;
+      background: white;
+      border: 2px dashed var(--primary);
+      border-radius: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .node {
+      position: relative;
+      padding: 15px 25px;
+      margin-right: 40px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    .node.checking {
+      box-shadow: 0 0 8px rgba(248, 231, 28, 0.8);
+      border: 2px solid rgba(248, 231, 28, 0.8);
+    }
+
+    .node.peek-highlight {
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.8);
+      border: 2px solid rgba(74, 144, 226, 0.8);
+    }
+
+
+
+    .node.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .node.removing {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes pulse-new {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .node.new-node {
+      animation: pulse-new 0.6s ease-out;
+    }
+
+    @keyframes pulse-search {
+      0% {
+        background-color: var(--highlight);
+      }
+
+      50% {
+        background-color: var(--secondary);
+      }
+
+      100% {
+        background-color: var(--highlight);
+      }
+    }
+
+    .node.search-highlight {
+      animation: pulse-search 1s ease-in-out;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      right: -25px;
+      width: 40px;
+      height: 2px;
+      background: var(--text);
+    }
+
+    .arrow:after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      right: -10px;
+      border: 7px solid transparent;
+      border-left-color: var(--text);
+    }
+
+    .label {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--secondary);
+      color: white;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      pointer-events: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #log {
+      grid-area: log;
+      margin: 0;
+      padding: 1rem;
+      max-height: 400px;
+      background: var(--surface, #f9f9f9);
+      border: 1px solid var(--primary);
+      border-radius: 0.5rem;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-primary, #333);
+      line-height: 1.4;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    #log::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+    }
+
+    #log div {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 0.25rem;
+      transition: background 0.2s;
+    }
+
+    #log div:nth-child(odd) {
+      background: rgba(0, 0, 0, 0.06);
+    }
+
+    #log div:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    #message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 999;
+    }
+
+    #message.show {
+      display: block;
+      opacity: 1;
+    }
+
+    #message.success {
+      background: var(--secondary);
+    }
+
+    #message.error {
+      background: var(--error);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+              Queue
+            </a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Priority Queue
+            </a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Priority Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+              Deque
+            </a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Deque Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Circular Queue
+            </a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Circular Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Lock Free Queue
+            </a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Lock Free Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+              Multi-Level Feedback Queue
+            </a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Multi-Level Feedback Queue Article
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <h1>Priority Queue Visualization (Linked List)</h1>
+  <div id="controls">
+    <input type="text" id="valueInput" placeholder="Enter value (number)" />
+    <button id="enqueueBtn">Enqueue</button>
+    <button id="dequeueBtn">Dequeue</button>
+    <button id="searchBtn">Search</button>
+    <button id="peekBtn">Peek</button>
+    <button id="isEmptyBtn">Is Empty?</button>
+    <button id="clearBtn">Clear</button>
+    <div id="complexity">Time Complexity: <span id="tc">–</span></div>
+  </div>
+  <div id="content">
+    <div id="queue"></div>
+    <pre id="codeBlock"><code></code></pre>
+    <div id="log"></div>
+  </div>
+  <div id="message"></div>
+
+  <script>
+
+    const codeSnippets = {
+      enqueue: `public void offer(T item) {
+          Node<T> newNode = new Node<>(item);
+          if (head == null || item.compareTo(head.data) < 0) {
+              newNode.next = head;
+              head = newNode;
+          } else {
+              Node<T> current = head;
+              while (current.next != null && current.next.data.compareTo(item) <= 0) {
+                  current = current.next;
+              }
+              newNode.next = current.next;
+              current.next = newNode;
+          }
+          size++;
+      }`,
+      dequeue: `public T dequeue() {
+    if (isEmpty()) throw new NoSuchElementException("Queue is empty");
+    T data = front.data;
+    front = front.next;
+    if (front == null) {
+        rear = null;
+    }
+    size--;
+    return data;
+}`,
+      isEmpty: `public boolean isEmpty() {
+    return size == 0;
+}`,
+      search: `public boolean search(T item) {
+    Node<T> current = front;
+    while (current != null) {
+        if (current.data.equals(item)) {
+            return true;
+        }
+        current = current.next;
+    }
+    return false;
+}`,
+      peek: `public T peek() {
+          if (head == null) throw new NoSuchElementException("Queue is empty");
+          return head.data;
+      }`
+
+    };
+
+    function showCodeSnippet(op) {
+      const code = codeSnippets[op] || '';
+      const lines = code.split('\n');
+      const block = document.querySelector('#codeBlock code');
+      block.innerHTML = lines
+        .map((line, idx) => `<span class="code-line" data-line="${idx}">${line}</span>`)
+        .join('\n');
+      clearHighlights();
+    }
+
+    function clearHighlights() {
+      document.querySelectorAll('.code-line.highlight')
+        .forEach(el => el.classList.remove('highlight'));
+    }
+
+    function highlightLine(num) {
+      clearHighlights();
+      const line = document.querySelector(`.code-line[data-line="${num}"]`);
+      if (line) line.classList.add('highlight');
+    }
+
+    function animateEnqueue(onComplete) {
+      showCodeSnippet('enqueue');
+      disableControls();
+
+      const raw = document.getElementById('valueInput').value.trim();
+      const value = Number(raw);
+      const container = document.getElementById('queue');
+
+      highlightLine(1);
+      setTimeout(() => {
+        highlightLine(2);
+        setTimeout(() => {
+          const nodes = Array.from(container.querySelectorAll('.node'));
+          const headVal = nodes.length ? Number(nodes[0].textContent) : null;
+
+          if (nodes.length === 0 || value < headVal) {
+            highlightLine(3);
+            setTimeout(() => {
+              highlightLine(4);
+              setTimeout(() => {
+                const newEl = createNodeEl(value);
+                container.insertBefore(newEl, nodes[0] || null);
+                requestAnimationFrame(() => newEl.classList.add('show'));
+                highlightLine(13);
+                setTimeout(() => {
+                  container.querySelectorAll('.node.checking')
+                    .forEach(n => n.classList.remove('checking'));
+                  onComplete();
+                  enableControls();
+                }, 300);
+              }, 300);
+            }, 300);
+
+          } else {
+            highlightLine(6);
+            setTimeout(() => {
+              let idx = -1;
+              function step() {
+                const children = Array.from(container.querySelectorAll('.node'));
+                const nextIdx = idx + 1;
+                const nextNode = children[nextIdx];
+
+                highlightLine(7);
+                setTimeout(() => {
+                  if (nextNode && Number(nextNode.textContent) <= value) {
+                    children.forEach(n => n.classList.remove('checking'));
+                    nextNode.classList.add('checking');
+                    highlightLine(8);
+                    setTimeout(() => {
+                      idx++;
+                      step();
+                    }, 300);
+
+                  } else {
+                    highlightLine(9);
+                    setTimeout(() => {
+                      highlightLine(10);
+                      setTimeout(() => {
+                        const children2 = Array.from(container.querySelectorAll('.node'));
+                        const newEl = createNodeEl(value);
+                        children2[idx].after(newEl);
+                        requestAnimationFrame(() => newEl.classList.add('show'));
+                        highlightLine(13);
+                        setTimeout(() => {
+                          container.querySelectorAll('.node.checking')
+                            .forEach(n => n.classList.remove('checking'));
+                          onComplete();
+                          enableControls();
+                        }, 300);
+                      }, 300);
+                    }, 300);
+                  }
+                }, 300);
+              }
+              step();
+            }, 300);
+          }
+        }, 300);
+      }, 300);
+    }
+
+
+    function createNodeEl(value) {
+      const el = document.createElement('div');
+      el.className = 'node';
+      el.textContent = value;
+      const arrow = document.createElement('div');
+      arrow.className = 'arrow';
+      el.appendChild(arrow);
+      return el;
+    }
+
+
+
+
+
+    function animateDequeue(onComplete) {
+      showCodeSnippet('dequeue');
+      disableControls();
+
+      highlightLine(1);
+      setTimeout(() => {
+        const container = document.getElementById('queue');
+        const nodes = container.querySelectorAll('.node');
+        if (nodes.length === 0) {
+          setTimeout(onComplete, 300);
+          return;
+        }
+
+        highlightLine(2);
+        setTimeout(() => {
+          highlightLine(3);
+          const firstEl = nodes[0];
+          firstEl.classList.add('removing');
+          firstEl.addEventListener('transitionend', () => {
+            highlightLine(4);
+            setTimeout(() => {
+              highlightLine(5);
+              setTimeout(() => {
+                highlightLine(8);
+                setTimeout(onComplete, 300);
+              }, 300);
+            }, 300);
+          }, { once: true });
+        }, 300);
+      }, 300);
+    }
+
+
+    function animateIsEmpty() {
+      showCodeSnippet('isEmpty');
+      highlightLine(0);
+      setTimeout(() => {
+        highlightLine(1);
+        setTimeout(() => {
+          highlightLine(2);
+        }, 300);
+      }, 300);
+    }
+
+
+    function animateSearchInit() {
+      showCodeSnippet('search');
+      highlightLine(1);
+      setTimeout(() => {
+        highlightLine(2);
+        setTimeout(() => {
+          highlightLine(3);
+        }, 300);
+      }, 300);
+    }
+
+    function animateSearch(value) {
+      showCodeSnippet('search');
+      this._showTC('O(n)');
+      this._log(`Search: ${value}`);
+      disableControls();
+
+      const nodes = Array.from(document.querySelectorAll('#queue .node'));
+      let i = 0;
+      const self = this;
+
+      const step = () => {
+        if (i === 0) {
+          highlightLine(1);
+        } else {
+          highlightLine(6);
+        }
+
+        setTimeout(() => {
+          highlightLine(2);
+
+          if (i >= nodes.length) {
+            setTimeout(() => {
+              highlightLine(8);
+              setTimeout(() => {
+                highlightLine(9);
+                showMessage(`"${value}" not found`, true);
+                self._log('Search result: not found');
+                enableControls();
+              }, 300);
+            }, 300);
+            return;
+          }
+
+          const el = nodes[i];
+          el.classList.add('search-highlight');
+          setTimeout(() => {
+            highlightLine(3);
+            setTimeout(() => {
+              if (el.childNodes[0].textContent === value) {
+                highlightLine(4);
+                setTimeout(() => {
+                  highlightLine(9);
+                  showMessage(`Found at node ${i + 1}`, false);
+                  self._log(`Search result: found at node ${i + 1}`);
+                  el.classList.remove('search-highlight');
+                  enableControls();
+                }, 300);
+              } else {
+                el.classList.remove('search-highlight');
+                i++;
+                step();
+              }
+            }, 300);
+          }, 300);
+        }, 300);
+      };
+
+      step();
+    }
+
+    function animatePeek(onComplete) {
+      showCodeSnippet('peek');
+      disableControls();
+
+      highlightLine(0);
+      setTimeout(() => {
+        if (!queue.head) {
+          highlightLine(1);
+          setTimeout(() => {
+            showMessage('Queue is empty', true);
+            setTimeout(() => {
+              onComplete();
+              enableControls();
+            }, 500);
+          }, 300);
+
+        } else {
+          highlightLine(2);
+          setTimeout(() => {
+            const first = document.querySelector('#queue .node');
+            if (first) first.classList.add('peek-highlight');
+
+            showMessage(`Peek: ${queue.head.value}`, false);
+            setTimeout(() => {
+              if (first) first.classList.remove('peek-highlight');
+              onComplete();
+              enableControls();
+            }, 1000);
+          }, 300);
+        }
+      }, 300);
+    }
+
+
+
+
+    function showMessage(text, isError) {
+      const msg = document.getElementById('message');
+      msg.textContent = text;
+      msg.className = `show ${isError ? 'error' : 'success'}`;
+      setTimeout(clearMessage, 2000);
+    }
+
+    function clearMessage() {
+      const msg = document.getElementById('message');
+      msg.className = '';
+    }
+
+    function disableControls() {
+      document.querySelectorAll('#controls button, #controls input')
+        .forEach(el => el.disabled = true);
+    }
+
+    function enableControls() {
+      document.querySelectorAll('#controls button, #controls input')
+        .forEach(el => el.disabled = false);
+    }
+
+
+    class PQNode {
+      constructor(value, priority) {
+        this.value = value;
+        this.priority = priority;
+        this.next = null;
+      }
+    }
+
+    class PriorityQueue {
+      constructor() {
+        this.head = null;
+        this.size = 0;
+        this.lastAction = null;
+      }
+
+      enqueue(value, priority) {
+        showCodeSnippet('enqueue');
+        this._showTC('O(n)');
+        this._log(`Enqueue: ${value}`);
+
+        animateEnqueue.call(this, () => {
+          const newNode = new PQNode(value, priority);
+          if (!this.head || priority < this.head.priority) {
+            newNode.next = this.head;
+            this.head = newNode;
+          } else {
+            let curr = this.head;
+            while (curr.next && curr.next.priority <= priority) {
+              curr = curr.next;
+            }
+            newNode.next = curr.next;
+            curr.next = newNode;
+          }
+          this.size++;
+          this.lastAction = 'enqueue';
+
+          updateVisualization();
+        });
+      }
+
+
+      dequeue() {
+        showCodeSnippet('dequeue');
+        this._showTC('O(1)');
+        this._log(`Dequeue: ${this.head ? this.head.value : 'none'}`);
+
+        animateDequeue(() => {
+          if (!this.head) {
+            showMessage('Queue is empty', true);
+            this._log('Dequeue attempted on empty queue');
+          } else {
+            this.head = this.head.next;
+            this.size--;
+            updateVisualization();
+            showMessage('Dequeued element', false);
+            this._log('Dequeue successful');
+          }
+          enableControls();
+        });
+      }
+
+
+      isEmpty() {
+        showCodeSnippet('isEmpty');
+        animateIsEmpty();
+        this._showTC('O(1)');
+        const empty = this.head === null;
+        showMessage(
+          empty ? 'Queue is empty' : 'Queue is not empty',
+          false
+        );
+        this._log(`isEmpty: ${empty}`);
+        return empty;
+      }
+
+      search(value) {
+        showCodeSnippet('search');
+        animateSearch.call(this, value);
+      }
+
+      peek() {
+        this._log(`Peek: ${this.head ? this.head.value : 'none'}`);
+        animatePeek.call(this, () => {
+        });
+        return this.head ? this.head.value : null;
+      }
+
+      _showTC(text) {
+        document.getElementById('tc').textContent = text
+      }
+      _log(msg) {
+        const log = document.getElementById('log')
+        const entry = document.createElement('div')
+        entry.textContent = msg
+        log.appendChild(entry)
+        if (log.children.length > 20) log.removeChild(log.firstChild)
+      }
+
+      clear() {
+        this.head = null;
+        this.size = 0;
+        this.lastAction = null;
+        updateVisualization();
+        clearHighlights();
+        document.getElementById('log').innerHTML = '';
+        showMessage('Queue cleared', false);
+      }
+    }
+
+
+    const queue = new PriorityQueue()
+    const enqueueBtn = document.getElementById('enqueueBtn');
+    const dequeueBtn = document.getElementById('dequeueBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const isEmptyBtn = document.getElementById('isEmptyBtn');
+
+    function updateVisualization() {
+      const container = document.getElementById('queue');
+      container.innerHTML = '';
+
+      const elems = [];
+      let curr = queue.head;
+      while (curr) {
+        const el = createNodeEl(curr.value);
+        container.appendChild(el);
+        elems.push(el);
+        curr = curr.next;
+      }
+
+      elems.forEach((el, i) => setTimeout(() => el.classList.add('show'), i * 100));
+
+      if (queue.lastAction === 'enqueue' && elems.length) {
+        const last = elems[elems.length - 1];
+        last.classList.add('new-node');
+        last.addEventListener('animationend',
+          () => last.classList.remove('new-node'),
+          { once: true }
+        );
+      }
+      queue.lastAction = null;
+    }
+
+
+    enqueueBtn.addEventListener('click', () => {
+      const v = document.getElementById('valueInput').value.trim();
+      if (!v || isNaN(v)) {
+        showMessage('Enter a valid number', true);
+        return;
+      }
+      const num = Number(v);
+      queue.enqueue(num, num);
+      document.getElementById('valueInput').value = '';
+    });
+
+    clearBtn.addEventListener('click', () => {
+      queue.clear();
+    });
+
+    const peekBtn = document.getElementById('peekBtn');
+    peekBtn.addEventListener('click', () => queue.peek());
+
+
+
+
+    dequeueBtn.addEventListener('click', () => queue.dequeue())
+    isEmptyBtn.addEventListener('click', () => queue.isEmpty())
+    searchBtn.addEventListener('click', () => {
+      const v = document.getElementById('valueInput').value.trim()
+      if (!v) { showMessage('Enter value', true); return }
+      queue.search(v)
+    });
+
+  </script>
+</body>
+
+</html>

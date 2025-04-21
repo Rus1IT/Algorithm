@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lock-Free Queue Visualization</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary-color: #4a90e2;
+      --primary-hover: #357ab8;
+      --bg-light: #f0f0f5;
+      --text-color: #333;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-md: rgba(0, 0, 0, 0.2);
+      --radius: 8px;
+      --gap: 16px;
+      --transition-fast: 0.2s ease;
+    }
+
+    .app-body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-light);
+      margin: 20px;
+      color: var(--text-color);
+    }
+
+    .main-title {
+      text-align: center;
+      margin-bottom: var(--gap);
+      font-size: 1.8em;
+    }
+
+    .controls,
+    .user-controls {
+      text-align: center;
+      margin-bottom: var(--gap);
+    }
+
+    .controls .btn-primary,
+    .user-controls .btn-primary {
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      background-color: var(--primary-color);
+      color: #fff;
+      box-shadow: 0 2px 4px var(--shadow-light);
+      transition: background-color var(--transition-fast), transform var(--transition-fast);
+      border: none;
+      cursor: pointer;
+      margin: 0 var(--gap);
+    }
+
+    .controls .btn-primary:hover,
+    .user-controls .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .controls .btn-primary:focus,
+    .user-controls .btn-primary:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+    }
+
+    .input-custom {
+      padding: 8px 12px;
+      margin: 0 var(--gap);
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      transition: border var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .input-custom:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+    }
+
+    .threads-container {
+      display: flex;
+      justify-content: center;
+      gap: calc(var(--gap) * 2);
+      margin-bottom: var(--gap);
+    }
+
+    .thread-item {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.1em;
+      box-shadow: 0 2px 6px var(--shadow-md);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .thread-item.active {
+      transform: scale(1.3);
+      box-shadow: 0 4px 10px var(--shadow-md);
+    }
+
+    .thread-item:hover {
+      transform: scale(1.1);
+    }
+
+    .thread-label {
+      position: absolute;
+      top: 70px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.75em;
+      color: #555;
+    }
+
+    .queue-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: var(--gap);
+      margin-bottom: var(--gap);
+      padding: var(--gap) var(--gap);
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    .queue-node {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      background: var(--node-gradient);
+      border: none;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25em;
+      color: var(--text-color);
+      box-shadow: 0 4px 6px var(--shadow-md);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1.2);
+        box-shadow: 0 6px 12px var(--shadow-md);
+      }
+
+      100% {
+        transform: scale(1);
+        box-shadow: 0 4px 6px var(--shadow-md);
+      }
+    }
+
+    .queue-node.new {
+      animation: pulse 0.3s ease-out forwards;
+    }
+
+    .queue-node:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 14px var(--shadow-md);
+    }
+
+    .pointer-item {
+      position: absolute;
+      top: -1.2em;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--highlight-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75em;
+      font-weight: bold;
+      color: var(--text-color);
+      box-shadow: 0 2px 4px var(--shadow-light);
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .pointer-item::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      background: var(--highlight-bg);
+    }
+
+    .log-container {
+      max-height: 150px;
+      overflow-y: auto;
+      background: #222;
+      color: #eee;
+      padding: 10px;
+      font-family: monospace;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 6px var(--shadow-light);
+    }
+
+    .log-container {
+      font-size: 1.1em;
+      max-height: 300px;
+      padding: 1rem;
+    }
+
+    .log-entry {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.5);
+      font-size: 1.05em;
+    }
+
+    .log-timestamp {
+      font-size: 0.9em;
+    }
+
+
+    .log-message {
+      flex: 1;
+      font-size: 1.05em;
+    }
+
+
+
+    .marker-item {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--shadow-md);
+      transition: transform var(--transition-fast);
+    }
+
+    .thread {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .thread.active {
+      transform: scale(1.3);
+      box-shadow: 0 8px 14px rgba(0, 0, 0, 0.3);
+    }
+
+    .node {
+      width: 70px;
+      height: 70px;
+      border: 2px solid var(--node-border);
+      border-radius: 8px;
+      background: #fff;
+      transition: background 0.4s, transform 0.4s;
+    }
+
+    .marker {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      z-index: 10;
+      box-shadow: 0 0 8px var(--marker-shadow);
+    }
+
+    @keyframes moveToNode {
+      0% {
+        transform: translate(0, 0) scale(0.8);
+      }
+
+      50% {
+        transform: translate(var(--dx), var(--dy)) scale(1.4);
+      }
+
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(1);
+      }
+    }
+
+
+    @keyframes moveToNode {
+      0% {
+        transform: translate(0, 0) scale(0.8);
+      }
+
+      50% {
+        transform: translate(var(--dx), var(--dy)) scale(1.3);
+      }
+
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body class="app-body">
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+              Queue
+            </a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Priority Queue
+            </a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Priority Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+              Deque
+            </a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Deque Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Circular Queue
+            </a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Circular Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Lock Free Queue
+            </a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Lock Free Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+              Multi-Level Feedback Queue
+            </a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Multi-Level Feedback Queue Article
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <h1 class="main-title">Lock-Free Queue Visualization</h1>
+
+  <div id="controls" class="controls">
+    <button id="startBtn" class="btn-primary">Start Auto Simulation</button>
+    <button id="stopBtn" class="btn-primary">Stop Auto Simulation</button>
+    <button id="resetBtn" class="btn-primary">Reset Queue</button>
+  </div>
+
+  <div id="user-controls" class="user-controls">
+    <select id="threadSelect" class="input-custom"></select>
+    <input id="valueInput" class="input-custom" type="number" placeholder="Value" />
+    <button id="manualEnqBtn" class="btn-primary">Manual Enqueue</button>
+    <button id="manualDeqBtn" class="btn-primary">Manual Dequeue</button>
+  </div>
+
+  <div id="threads" class="threads-container"></div>
+
+  <div id="queue" class="queue-container"></div>
+
+  <div id="log" class="log-container"></div>
+
+  <script>
+    class Node { constructor(value) { this.value = value; this.next = null; } }
+    let head, tail; let autoRun = false;
+    const nodeElems = new Map(); let autoTimers = [];
+
+    function initQueue() {
+      head = tail = new Node(null);
+      nodeElems.clear(); clearLog(); renderQueue();
+    }
+
+    function renderQueue() {
+      const q = document.getElementById('queue'); q.innerHTML = '';
+      let curr = head;
+      while (curr) {
+        let nd = nodeElems.get(curr);
+        if (!nd) {
+          nd = document.createElement('div'); nd.className = 'queue-node';;
+          nodeElems.set(curr, nd);
+        }
+        nd.innerHTML = `<div class='value'>${curr.value ?? ''}</div>`;
+        const label = document.createElement('div'); label.className = 'pointer-item';
+        if (curr === head) label.textContent = 'HEAD'; else if (curr === tail) label.textContent = 'TAIL';
+        nd.appendChild(label);
+        q.appendChild(nd);
+        curr = curr.next;
+      }
+    }
+
+    function log(msg, color = '#fff') {
+      const entry = document.createElement('div'); entry.style.color = color; entry.textContent = msg;
+      const logDiv = document.getElementById('log'); logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight;
+    }
+    function clearLog() { document.getElementById('log').innerHTML = ''; }
+
+    function selectThreadEl(id) {
+      document.querySelectorAll('.thread').forEach(el => el.classList.remove('active'));
+      const el = document.getElementById(`thread-${id}`);
+      if (el) el.classList.add('active');
+    }
+
+    function animateThread(thread, targetNode) {
+      selectThreadEl(thread.id);
+      const marker = document.createElement('div'); marker.className = 'marker'; marker.style.background = thread.color;
+      document.body.appendChild(marker);
+      const start = document.getElementById(`thread-${thread.id}`).getBoundingClientRect();
+      const endEl = nodeElems.get(targetNode).getBoundingClientRect();
+      const dx = (endEl.left + endEl.width / 2) - (start.left + start.width / 2);
+      const dy = (endEl.top + endEl.height / 2) - (start.top + start.height / 2);
+      marker.style.left = `${start.left + start.width / 2}px`;
+      marker.style.top = `${start.top + start.height / 2}px`;
+      marker.style.setProperty('--dx', `${dx}px`);
+      marker.style.setProperty('--dy', `${dy}px`);
+      marker.style.animation = 'moveToNode 2s ease-in-out forwards';
+      marker.addEventListener('animationend', () => { marker.remove(); selectThreadEl(null); });
+    }
+
+    function enqueue(thread, value) {
+      log(`T${thread.id}: enqueue(${value})`, thread.color);
+      const newNode = new Node(value);
+      while (true) {
+        const last = tail, next = last.next;
+        if (last === tail) {
+          if (!next) {
+            last.next = newNode; renderQueue(); animateThread(thread, newNode);
+            tail = newNode; renderQueue(); animateThread(thread, newNode);
+            log(`T${thread.id}: enqueue OK`, thread.color); break;
+          } else tail = next;
+        }
+      }
+
+    }
+
+    function dequeue(thread) {
+      log(`T${thread.id}: dequeue()`, thread.color);
+      while (true) {
+        const first = head, next = first.next;
+        if (first === head) {
+          if (!next) { log(`T${thread.id}: queue empty`, thread.color); break; }
+          head = next; renderQueue(); animateThread(thread, next);
+          log(`T${thread.id}: dequeued ${next.value}`, thread.color); break;
+        }
+      }
+    }
+
+    const threads = [];
+    function createThreads(n = 4) {
+      threads.length = 0; document.getElementById('threads').innerHTML = '';
+      const sel = document.getElementById('threadSelect'); sel.innerHTML = '';
+      for (let i = 1; i <= n; i++) {
+        const color = `hsl(${i * (360 / n)},70%,50%)`;
+        threads.push({ id: i, color });
+        const div = document.createElement('div'); div.id = `thread-${i}`; div.className = 'thread';
+        div.style.background = color; div.textContent = i;
+        const lbl = document.createElement('div'); lbl.className = 'thread-label'; lbl.textContent = `Thread ${i}`;
+        div.appendChild(lbl); document.getElementById('threads').appendChild(div);
+        const opt = document.createElement('option'); opt.value = i; opt.textContent = `Thread ${i}`; sel.appendChild(opt);
+      }
+    }
+
+    function startAuto() {
+      if (autoRun) return; autoRun = true;
+      threads.forEach(t => {
+        const runOp = () => {
+          if (!autoRun) return;
+          Math.random() < .7 ? enqueue(t, Math.floor(Math.random() * 100)) : dequeue(t);
+          autoTimers.push(setTimeout(runOp, 2000 + Math.random() * 1000));
+        };
+        runOp();
+      });
+    }
+    function stopAuto() { autoRun = false; autoTimers.forEach(t => clearTimeout(t)); autoTimers = []; }
+
+    document.getElementById('startBtn').onclick = startAuto;
+    document.getElementById('stopBtn').onclick = stopAuto;
+    document.getElementById('resetBtn').onclick = () => { stopAuto(); initQueue(); };
+    document.getElementById('manualEnqBtn').onclick = () => {
+      const tid = +document.getElementById('threadSelect').value;
+      const val = +document.getElementById('valueInput').value;
+      const th = threads.find(x => x.id === tid); if (th && !isNaN(val)) enqueue(th, val);
+    };
+    document.getElementById('manualDeqBtn').onclick = () => {
+      const tid = +document.getElementById('threadSelect').value;
+      const th = threads.find(x => x.id === tid); if (th) dequeue(th);
+    };
+
+    initQueue(); createThreads(4); document.getElementById('threadSelect').value = 1;
+  </script>
+</body>
+
+</html>

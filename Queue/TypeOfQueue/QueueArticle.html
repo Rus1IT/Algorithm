@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFO LinkedList</title>
+  <link rel="icon" href="../Assets/svg/align-bottom-svgrepo-com.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="text-lg leading-relaxed flex flex-col min-h-screen bg-gray-100">
+
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+              Queue
+            </a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Priority Queue
+            </a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Priority Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+              Deque
+            </a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Deque Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Circular Queue
+            </a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Circular Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Lock Free Queue
+            </a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Lock Free Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+              Multi-Level Feedback Queue
+            </a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Multi-Level Feedback Queue Article
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex justify-center">
+      <h1 class="text-4xl font-bold text-gray-800">FIFO Queue Implemented by Linked List</h1>
+    </div>
+
+    <div class="container mx-auto px-6 pb-12 space-y-8">
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+        <p class="text-gray-700 mb-6">
+          A Simple FIFO (First-In, First-Out) Queue is a fundamental data structure where elements are processed in the
+          order they were added. When implemented using a linked list, the FIFO queue can dynamically grow or shrink,
+          offering a flexible, memory-efficient solution for managing tasks and resources.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Overview of FIFO Queue with Linked List Implementation</h3>
+        <p class="text-gray-700 mb-4">
+          In this implementation, processes (or elements) are added to the rear of the queue and removed from the front,
+          ensuring the FIFO principle. The key advantage of using a linked list over an array-based queue is the
+          flexibility of dynamic memory allocation, which eliminates the need for predefined capacity and reduces memory
+          wastage.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Key Operations</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Enqueue:</strong> Adds a new node to the rear (tail) of the queue.</li>
+          <li><strong>Dequeue:</strong> Removes a node from the front (head) of the queue.</li>
+          <li><strong>Peek:</strong> Allows inspection of the front element without removal.</li>
+          <li><strong>Dynamic Nature:</strong> The queue dynamically grows or shrinks as needed without predefined
+            limits.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">History of Simple FIFO Queue Implemented by Linked List</h3>
+        <h4 class="text-lg font-semibold mb-2">Early Queue Concepts (1950s - 1960s)</h4>
+        <p class="text-gray-700 mb-4">
+          The FIFO queue concept originated with early batch processing systems. It was crucial for managing tasks in
+          the order they arrived. Early queue implementations, though, were limited by fixed-size memory allocations and
+          static structures.
+        </p>
+
+        <h4 class="text-lg font-semibold mb-2">Emergence of Linked Lists (1970s)</h4>
+        <p class="text-gray-700 mb-4">
+          The linked list provided a more flexible and dynamic approach to queue implementation, enabling systems to add
+          and remove elements without being constrained by fixed memory sizes. In the 1970s, linked lists became widely
+          used in data structures, including FIFO queues.
+        </p>
+
+        <h4 class="text-lg font-semibold mb-2">Formalization in Algorithms (1980s - 1990s)</h4>
+        <p class="text-gray-700 mb-4">
+          The 1980s and 1990s saw the formalization of linked list–based queues as a primary data structure in computer
+          science. The linked list–based FIFO queue became essential for task scheduling, memory management, and buffer
+          handling in operating systems and networking.
+        </p>
+
+        <h4 class="text-lg font-semibold mb-2">Modern Usage (2000s - Present)</h4>
+        <p class="text-gray-700 mb-6">
+          Today, FIFO queues implemented with linked lists are widely used in operating systems for process scheduling,
+          network packet buffers, and message queues for inter-process communication in distributed systems. Their
+          efficiency lies in their dynamic nature, making them ideal for handling unpredictable workloads.
+        </p>
+
+        <p class="text-gray-700">
+          The Simple FIFO queue implemented by a linked list is a classic, dynamic structure that continues to be an
+          essential building block in modern software development. Its key advantage is the dynamic memory allocation
+          that allows for flexible task scheduling, memory management, and data handling without fixed-size constraints.
+        </p>
+      </section>
+
+    <div class="bg-white rounded-lg shadow shadow p-6">
+      <div class="flex-1 p-6 overflow-visible">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+            <img src="../Assets/svg/cld-server-svgrepo-com.svg" alt="LinkedList Icon" class="w-8 h-8">
+          </div>
+          <h2 class="text-xl font-semibold">FIFO Queue Implemented by Linked List</h2>
+        </div>
+
+        <p class="text-gray-700 mb-6">
+          A <strong>Simple FIFO (First-In-First-Out) Queue</strong> implemented with a <strong>LinkedList</strong>
+          provides an efficient way to manage data by maintaining the order of elements as they were inserted. In this
+          implementation, we use a linked list to dynamically allocate memory for elements, offering efficient queue
+          operations without the need for resizing, unlike an array-based queue.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Node Class: The Building Block</h3>
+        <p class="text-gray-700 mb-4">
+          The <strong>Node class</strong> stores an element’s data and a reference to the next node in the queue. This
+          allows the queue to be dynamically resized as elements are added or removed.
+        </p>
+        <pre class="bg-gray-100 p-6 rounded-md text-base mb-6 overflow-x-auto">
+class Node<T> {
+    T data;
+    Node<T> next;
+    
+    Node(T data) {
+        this.data = data;
+        this.next = null;  // Initially, next is null because it's the only node
+    }
+}
+          </pre>
+
+        <h3 class="text-xl font-semibold mb-2">Queue Class: Managing the LinkedList</h3>
+        <p class="text-gray-700 mb-4">
+          The <strong>Queue class</strong> manages the linked list, implementing key queue operations such as enqueue,
+          dequeue, peek, isEmpty, and size.
+        </p>
+
+        <h4 class="text-lg font-semibold mb-2">Enqueue Operation</h4>
+        <p class="text-gray-700 mb-4">
+          The <strong>enqueue</strong> operation adds an item to the end of the queue. A new node is created, and the
+          tail pointer is updated to point to this new node. If the queue is empty, both the head and the tail are set
+          to the new node.
+        </p>
+        <pre class="bg-gray-100 p-6 rounded-md text-base mb-6 overflow-x-auto">
+public void enqueue(T item) {
+    Node<T> newNode = new Node<>(item);  // Create a new node with the given data
+    
+    if (tail != null) {  // If the queue is not empty, link the new node to the current tail
+        tail.next = newNode;  // Old tail’s next points to the new node
+    }
+    
+    tail = newNode;  // Move the tail pointer to the new node
+    
+    if (head == null) {  // If the queue was empty, set both head and tail to the new node
+        head = tail;
+    }
+    
+    size++;  // Increment the size of the queue
+}
+          </pre>
+
+        <h4 class="text-lg font-semibold mb-2">Dequeue Operation</h4>
+        <p class="text-gray-700 mb-4">
+          The <strong>dequeue</strong> operation removes the element from the front of the queue. The head pointer is
+          updated to point to the next node in the list. If the queue is empty after the removal, both head and tail are
+          set to null.
+        </p>
+        <pre class="bg-gray-100 p-6 rounded-md text-base mb-6 overflow-x-auto">
+public T dequeue() {
+    if (head == null) {  // Check if the queue is empty
+        throw new NoSuchElementException("Queue is empty");
+    }
+
+    T data = head.data;  // Store the data of the current head node
+    head = head.next;    // Move the head pointer to the next node
+    
+    if (head == null) {  // If the queue becomes empty after dequeue, set tail to null
+        tail = null;
+    }
+
+    size--;  // Decrease the size of the queue
+    return data;  // Return the data of the dequeued node
+}
+          </pre>
+
+        <h4 class="text-lg font-semibold mb-2">Peek Operation</h4>
+        <p class="text-gray-700 mb-4">
+          The <strong>peek</strong> operation allows you to view the front element of the queue without removing it.
+          This operation is useful for checking the next element to be processed.
+        </p>
+        <pre class="bg-gray-100 p-6 rounded-md text-base mb-6 overflow-x-auto">
+public T peek() {
+    if (head == null) {  // If the queue is empty
+        throw new NoSuchElementException("Queue is empty");
+    }
+    return head.data;  // Return the data at the front of the queue (head)
+}
+          </pre>
+
+        <h4 class="text-lg font-semibold mb-2">isEmpty Operation</h4>
+        <p class="text-gray-700 mb-4">
+          The <strong>isEmpty</strong> method checks whether the queue has any elements. It returns true if the queue is
+          empty (i.e., head is null).
+        </p>
+        <pre class="bg-gray-100 p-6 rounded-md text-base mb-6 overflow-x-auto">
+public boolean isEmpty() {
+    return head == null;  // If head is null, the queue is empty
+}
+          </pre>
+
+        <h4 class="text-lg font-semibold mb-2">Size Operation</h4>
+        <p class="text-gray-700 mb-4">
+          The <strong>size</strong> operation returns the current number of elements in the queue, which is tracked
+          dynamically by the queue class.
+        </p>
+        <pre class="bg-gray-100 p-6 rounded-md text-base mb-6 overflow-x-auto">
+public int size() {
+    return size;  // Return the current size of the queue
+}
+          </pre>
+
+        <h3 class="text-xl font-semibold mb-2">Key Points</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Time Complexity:</strong>
+            <ul class="list-inside">
+              <li><strong>enqueue:</strong> O(1) (constant time) because we are only modifying the tail pointer.</li>
+              <li><strong>dequeue:</strong> O(1) because we only move the head pointer and do not need to traverse the
+                list.</li>
+              <li><strong>peek:</strong> O(1) as we directly access the front of the queue.</li>
+              <li><strong>isEmpty:</strong> O(1) as it only checks if head is null.</li>
+              <li><strong>size:</strong> O(1) as the size is maintained dynamically.</li>
+            </ul>
+          </li>
+          <li><strong>Space Complexity:</strong> O(n), where n is the number of elements in the queue. Each element
+            requires a Node object with a reference to the next node.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Example Usage</h3>
+        <pre class="bg-gray-100 p-6 rounded-md text-base mb-6 overflow-x-auto">
+public class Main {
+    public static void main(String[] args) {
+        LinkedQueue<Integer> queue = new LinkedQueue<>();
+        
+        // Enqueue elements
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+        
+        // Dequeue elements
+        System.out.println("Dequeued: " + queue.dequeue());  // Output: 1
+        System.out.println("Dequeued: " + queue.dequeue());  // Output: 2
+        
+        // Peek the front element
+        System.out.println("Peek: " + queue.peek());  // Output: 3
+        
+        // Check if the queue is empty
+        System.out.println("Is the queue empty? " + queue.isEmpty());  // Output: false
+        
+        // Get the size of the queue
+        System.out.println("Queue size: " + queue.size());  // Output: 1
+    }
+}
+          </pre>
+
+        <div class="mt-6 text-center">
+          <a href="Queue.html"
+            class="inline-block bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition">
+            Go to Visualization
+          </a>
+        </div>
+      </div>
+    </div>
+    </div>
+  </main>
+</body>
+
+</html>

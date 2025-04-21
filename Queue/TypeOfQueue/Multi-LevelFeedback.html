@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLFQ Visualization</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: #4a90e2;
+      --secondary: #50e3c2;
+      --bg: #f7fafd;
+      --text: #222;
+      --highlight: rgba(248, 231, 28, 0.5);
+      --success: #4caf50;
+      --error: #e94e77;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: var(--primary);
+    }
+
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    #controls input,
+    #controls button {
+      padding: 10px 14px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 2px solid var(--primary);
+    }
+
+    #controls button {
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+    }
+
+    #controls button:hover {
+      background: var(--secondary);
+    }
+
+    #complexity {
+      padding: 10px 16px;
+      background: white;
+      border-left: 4px solid var(--secondary);
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-top: 6px;
+    }
+
+    #queueVisualization {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .level {
+      background: white;
+      border: 2px dashed var(--primary);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .level h3 {
+      margin: 0 0 10px 10px;
+      font-size: 18px;
+    }
+
+    .task {
+      display: inline-block;
+      position: relative;
+      padding: 10px 18px;
+      margin-bottom: 28px;
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-right: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .task::after {
+      content: attr(data-remaining) " ticks";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: var(--secondary);
+      color: white;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    }
+
+    #codeBlock {
+      margin-top: 30px;
+      background: #272822;
+      color: #f8f8f2;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      overflow-x: auto;
+      font-size: 15px;
+      white-space: pre;
+    }
+
+    #log {
+      text-align: center;
+      margin-top: 20px;
+      font-family: monospace;
+      font-size: 15px;
+      color: #2e7d32;
+    }
+
+    #message {
+      text-align: center;
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 16px;
+      display: none;
+      border-radius: 6px;
+    }
+
+    .success {
+      background: var(--success);
+      color: white;
+    }
+
+    .error {
+      background: var(--error);
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <body>
+    <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+        <nav>
+          <ul class="flex space-x-8">
+            <li class="flex flex-col items-start">
+              <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+                Queue
+              </a>
+              <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+                Queue Article
+              </a>
+            </li>
+            <li class="flex flex-col items-start">
+              <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+                Priority Queue
+              </a>
+              <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+                Priority Queue Article
+              </a>
+            </li>
+            <li class="flex flex-col items-start">
+              <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+                Deque
+              </a>
+              <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+                Deque Article
+              </a>
+            </li>
+            <li class="flex flex-col items-start">
+              <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+                Circular Queue
+              </a>
+              <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+                Circular Queue Article
+              </a>
+            </li>
+            <li class="flex flex-col items-start">
+              <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+                Lock Free Queue
+              </a>
+              <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+                Lock Free Queue Article
+              </a>
+            </li>
+            <li class="flex flex-col items-start">
+              <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+                Multi-Level Feedback Queue
+              </a>
+              <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+                Multi-Level Feedback Queue Article
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <h1>Multilevel Feedback Queue (MLFQ)</h1>
+
+    <div id="controls">
+      <input type="text" id="taskInput" placeholder="Task name" />
+      <input type="number" id="burstInput" placeholder="Burst time" />
+      <button id="addTaskBtn">Add Task</button>
+      <button id="randomAddBtn">Add Random Tasks</button>
+      <button id="tickBtn">Tick (1 step)</button>
+      <button id="isEmptyBtn">Check if Empty</button>
+      <button id="resetBtn">Reset</button>
+      <div id="complexity">Time Complexity: <span>O(1)</span></div>
+    </div>
+
+    <div id="queueVisualization"></div>
+    <pre id="codeBlock"><code>// Code will appear here</code></pre>
+    <div id="log"></div>
+    <div id="message"></div>
+
+    <script>
+      class Task {
+        constructor(name, burst) {
+          this.name = name;
+          this.burst = burst;
+          this.remaining = burst;
+        }
+      }
+
+      class MLFQ {
+        constructor() {
+          this.levels = [[], [], []];
+          this.quanta = [2, 4, 6];
+          this.tickCount = 0;
+          this.boostInterval = 5;
+        }
+
+        addTask(task) {
+          this.enqueue(task, 0);
+        }
+
+        enqueue(task, level = 0) {
+          this.levels[level].push(task);
+          this.log(`Task "${task.name}" enqueued to level ${level}`);
+          this.render();
+        }
+
+        dequeue(level) {
+          if (this.levels[level].length > 0) {
+            const t = this.levels[level].shift();
+            this.log(`Dequeued "${t.name}" from level ${level}`);
+            return t;
+          }
+          return null;
+        }
+
+        isEmpty() {
+          return this.levels.every(l => l.length === 0);
+        }
+
+        reset() {
+          this.levels = [[], [], []];
+          this.tickCount = 0;
+          this.log("MLFQ has been reset.");
+          this.render();
+        }
+
+        /** Автоматический boost для предотвращения starvation */
+        boostLongWaitingTasks() {
+          for (let i = this.levels.length - 1; i > 0; i--) {
+            if (this.levels[i].length > 0) {
+              const t = this.levels[i].shift();
+              this.levels[i - 1].push(t);
+              this.log(`🔥 Auto-boost: "${t.name}" from L${i} to L${i - 1}`);
+              this.render();
+              return;
+            }
+          }
+          this.log("✨ Auto-boost: no tasks");
+        }
+
+        tick() {
+          this.tickCount++;
+          if (this.tickCount % this.boostInterval === 0) {
+            this.boostLongWaitingTasks();
+          }
+          for (let i = 0; i < this.levels.length; i++) {
+            if (this.levels[i].length > 0) {
+              const task = this.dequeue(i);
+              const q = this.quanta[i];
+              this.showCode(i);
+              this.log(`Tick #${this.tickCount}: "${task.name}" at L${i}`);
+
+              task.remaining -= q;
+              setTimeout(() => {
+                if (task.remaining <= 0) {
+                  this.log(`✅ "${task.name}" completed`);
+                } else {
+                  const next = Math.min(i + 1, this.levels.length - 1);
+                  this.enqueue(task, next);
+                  this.log(`↘️ "${task.name}" moved to level ${next}`);
+                }
+                this.render();
+              }, 400);
+              return;
+            }
+          }
+          this.log(`⏳ Tick #${this.tickCount}: no tasks`);
+        }
+
+        render() {
+          const c = document.getElementById('queueVisualization');
+          c.innerHTML = '';
+          this.levels.forEach((q, i) => {
+            const lvl = document.createElement('div');
+            lvl.className = 'level';
+            lvl.innerHTML = `<h3>Level ${i}</h3>`;
+            q.forEach(t => {
+              const el = document.createElement('div');
+              el.className = 'task';
+              el.textContent = t.name;
+              el.setAttribute('data-remaining', `Remaining: ${t.remaining}`);
+              lvl.appendChild(el);
+            });
+            c.appendChild(lvl);
+          });
+        }
+
+        log(txt) {
+          document.getElementById('log').textContent = txt;
+        }
+
+        showCode(l) {
+          const map = [
+            `// Level 0
+if (task.remaining <= 2) complete();
+else moveTo(1);`,
+            `// Level 1
+if (task.remaining <= 4) complete();
+else moveTo(2);`,
+            `// Level 2
+if (task.remaining <= 6) complete();
+else stay();`
+          ];
+          document.querySelector('#codeBlock code').textContent = map[l];
+        }
+      }
+
+      const sched = new MLFQ();
+
+      document.getElementById('addTaskBtn').addEventListener('click', () => {
+        const n = document.getElementById('taskInput').value.trim();
+        const b = parseInt(document.getElementById('burstInput').value);
+        if (!n || isNaN(b) || b <= 0) return showMessage("Invalid input", true);
+        sched.addTask(new Task(n, b));
+        document.getElementById('taskInput').value = '';
+        document.getElementById('burstInput').value = '';
+      });
+
+      document.getElementById('randomAddBtn').addEventListener('click', () => {
+        const cnt = parseInt(prompt("How many random tasks?", "5"));
+        if (isNaN(cnt) || cnt <= 0) return;
+        for (let i = 0; i < cnt; i++) {
+          const name = 'T' + Math.floor(Math.random() * 10000);
+          const burst = Math.floor(Math.random() * 10) + 1;
+          sched.addTask(new Task(name, burst));
+        }
+      });
+
+      document.getElementById('tickBtn').addEventListener('click', () => {
+        sched.tick();
+      });
+
+      document.getElementById('isEmptyBtn').addEventListener('click', () => {
+        const e = sched.isEmpty();
+        showMessage(e ? "Queue is empty" : "Queue is not empty", !e);
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        sched.reset();
+      });
+
+      function showMessage(txt, isErr = false) {
+        const m = document.getElementById('message');
+        m.textContent = txt;
+        m.className = isErr ? 'error' : 'success';
+        m.style.display = 'block';
+        setTimeout(() => m.style.display = 'none', 2000);
+      }
+    </script>
+  </body>
+
+</html>

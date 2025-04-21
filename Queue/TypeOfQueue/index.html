@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Queue Template</title>
+  <link rel="icon" href="Assets/svg/queue-svgrepo-com.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="text-lg flex flex-col min-h-screen bg-gray-100">
+
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">Queue</a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">Queue Article</a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">Priority Queue</a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">Priority Queue
+              Article</a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">Deque</a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">Deque Article</a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">Circular Queue</a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">Circular Queue
+              Article</a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">Lock Free Queue</a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">Lock Free Queue
+              Article</a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html"
+              class="text-xl font-semibold text-white hover:underline">Multi-Level Feedback Queue</a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">MLFQ
+              Article</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="flex items-center justify-center h-15">
+    <h1 class="text-4xl font-bold text-gray-800">Queue</h1>
+  </div>
+
+  <main class="flex-1 overflow-y-auto p-6 space-y-4">
+    <div class="bg-white rounded-lg shadow p-4 flex items-start">
+      <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+        <span class="text-gray-600 text-2xl">📝</span>
+      </div>
+      <div class="flex-1 space-y-4">
+        A queue is a fundamental linear data structure that follows the “first in, first out” (FIFO) principle: elements
+        are added at the rear and removed from the front, ensuring that the earliest inserted item is the first to be
+        processed. This simple yet powerful model mirrors many everyday scenarios—such as customers waiting in line at a
+        service counter or tasks lined up for a printer—and provides a clear, predictable ordering of operations.
+        </p>
+        <p class="text-gray-600">
+          In computer science, queues are integral to scheduling algorithms, network buffering, and task management
+          systems, where maintaining the order of arrival is crucial for fairness and efficiency. With constant‑time
+          <code class="font-mono text-sm">enqueue</code> and <code class="font-mono text-sm">dequeue</code> operations,
+          a queue offers both performance and simplicity, making it an essential abstraction for developers building
+          sequential processing workflows.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-4 flex items-start">
+      <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+        <span class="text-gray-600 text-xl">📜</span>
+      </div>
+
+      <div class="flex-1 flex flex-col space-y-4">
+        <div class="flex space-x-2 overflow-x-auto mb-4">
+          <div class="flex-shrink-0 w-96 h-64 overflow-hidden rounded">
+            <img
+              src="https://img.freepik.com/free-vector/people-queue-from-characters-stand-line_107791-14992.jpg?ga=GA1.1.2003039228.1740914066&semt=ais_hybrid&w=740"
+              alt="Ancient marketplace" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex-shrink-0 w-96 h-64 overflow-hidden rounded">
+            <img
+              src="https://www.simplilearn.com/ice9/free_resources_article_thumb/Working_example_of_Priority_Queue_in_Data_Structure.png"
+              alt="Priority queue example" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex-shrink-0 w-96 h-64 overflow-hidden rounded">
+            <img
+              src="https://www.researchgate.net/publication/361772145/figure/fig2/AS:11431281084348375@1663149771801/Multilevel-feedback-queue-scheduling.png"
+              alt="MLFQ diagram" class="w-full h-full object-cover" />
+          </div>
+        </div>
+
+        <h2 class="text-lg font-semibold">History &amp; Evolution of the Queue</h2>
+
+        <p class="text-gray-600">
+          The concept of a queue has roots far older than computing itself. In everyday life, queues have existed
+          wherever resources are limited and demand must be served in a fair, orderly fashion. Ancient marketplaces in
+          Greece and Rome had lines of citizens waiting to buy grain or pay taxes; medieval European guilds organized
+          artisans in sequential workshops; post offices and banks of the 19th century printed formal documents
+          requiring customers to stand in line. These human queues illustrate the central idea: earliest arrivals are
+          served before later ones, minimizing contention and envy.
+        </p>
+
+        <p class="text-gray-600">
+          With the dawn of digital computing in the mid‑20th century, practitioners sought data structures to mirror
+          this real‑world fairness in machine processes. Early computer systems—batch processors of the 1950s—maintained
+          job queues on magnetic tape drives: programs were enqueued as they arrived and dequeued one by one for
+          execution. The UNIVAC I and IBM 704 machines used simple spoolers: incoming tasks formed a first‑in, first‑out
+          list, ensuring jobs ran in arrival order and enabling predictable throughput.
+        </p>
+
+        <p class="text-gray-600">
+          In academic circles, the queue was formally introduced alongside stacks in Donald Knuth’s seminal work,
+          <em>The Art of Computer Programming</em> (1968). Knuth defined the queue as an abstract data type (ADT)
+          supporting two primary operations: enqueue (insert at rear) and dequeue (remove from front). This clear
+          abstraction distinguished it from unordered lists or random‑access arrays, emphasizing its FIFO semantics.
+          Around the same time, Edsger Dijkstra and Tony Hoare used queues in operating system scheduling models and
+          concurrent programming, cementing its role in systems design.
+        </p>
+
+        <p class="text-gray-600">
+          As hardware evolved, so did queue implementations. Early software used simple linked lists: each node pointed
+          to its successor, and the ADT maintained head and tail pointers for O(1) enqueue and dequeue. However, limited
+          memory and performance constraints spurred array‑based techniques. In 1960s mainframes, fixed‑size buffers
+          were allocated for I/O and interrupt handling. To reuse space without relocating data, engineers conceived the
+          circular buffer (or ring buffer): indexes wrap around the array’s end back to its start. This innovation
+          delivered constant‑time operations, bounded memory usage, and elimination of dynamic allocation
+          overhead—critical for real‑time and embedded systems.
+        </p>
+
+        <p class="text-gray-600">
+          The 1970s and 1980s saw diversification of the queue concept. Priority queues emerged: each element carries a
+          priority, and the dequeue operation removes the highest‑priority element, not necessarily the oldest. Early
+          implementations used sorted linked lists, then heaps (binary, binomial, Fibonacci) for logarithmic insertion
+          and removal times—fundamental to Dijkstra’s shortest‑path algorithm and event simulation. Meanwhile,
+          double‑ended queues (deques) appeared, allowing insertion or removal at both ends, supporting tasks like
+          undo/redo stacks and sliding‑window algorithms in streaming data.
+        </p>
+
+        <p class="text-gray-600">
+          Operating systems demanded more sophisticated scheduling. In the 1960s, IBM’s OS/360 introduced multi‑level
+          feedback queues (MLFQ): processes move between queues of differing priorities based on CPU and I/O behavior,
+          enabling responsiveness for interactive tasks while preventing starvation of long‑running jobs. Research by
+          Bell Labs and subsequent UNIX variants refined this approach with dynamic priority adjustments and aging
+          mechanisms.
+        </p>
+
+        <p class="text-gray-600">
+          With the advent of multiprocessor and distributed systems in the 1990s and 2000s, concurrency became vital.
+          Standard libraries (e.g., POSIX threads, Java’s <code class="font-mono text-sm">java.util.concurrent</code>)
+          provided thread‑safe queues: blocking queues suspend threads when empty or full, concurrent queues allow
+          lock‑free or fine‑grained locking implementations (Michael & Scott’s lock‑free queue, 1996), and message
+          queues enable interprocess communication across networks (e.g., RabbitMQ, Amazon SQS). These structures
+          underpin modern microservices, cloud architectures, and event‑driven systems.
+        </p>
+
+        <p class="text-gray-600">
+          In recent years, queues have continued evolving. New specialized forms—multi‑priority, time‑warp queues,
+          lock‑elision structures—target performance at scale. Persistent queues, combining disk‑backed durability with
+          in‑memory speed (Apache Kafka), power big data pipelines and log aggregation. Meanwhile, theoretical research
+          refines performance bounds under adversarial and real‑world workloads.
+        </p>
+
+        <p class="text-gray-600">
+          From waiting lines in ancient bazaars to high‑throughput message brokers powering global services, the queue
+          ADT exemplifies a simple yet profoundly adaptable model. Its history reflects the shifting demands of
+          technology: fairness and predictability in human systems, real‑time constraints in hardware, resource
+          scheduling in operating systems, and concurrency in distributed applications. Understanding this evolution not
+          only highlights the queue’s enduring importance but also offers insight into designing future data structures
+          for emerging challenges.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-4 flex items-start">
+      <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+        <span class="text-gray-600 text-xl">🔃</span>
+      </div>
+
+      <div class="flex-1 space-y-4">
+        <h2 class="text-lg font-semibold">Fundamental Queue Operations</h2>
+
+        <div class="text-gray-700 space-y-2">
+          <div>
+            <strong>enqueue(item)</strong><br />
+            Insert an element at the <em>rear</em>.
+            Bounded queues throw or block if full.
+            <code class="font-mono text-sm">O(1)</code>.
+          </div>
+
+          <div>
+            <strong>dequeue() → item</strong><br />
+            Remove from the <em>front</em>.
+            Throw/return null/block if empty.
+            <code class="font-mono text-sm">O(1)</code>.
+          </div>
+
+          <div>
+            <strong>peek() → item</strong><br />
+            Like dequeue, but do not remove.
+            <code class="font-mono text-sm">O(1)</code>.
+          </div>
+
+          <div class="flex flex-wrap gap-4">
+            <div><strong>isEmpty()</strong> → boolean</div>
+            <div><strong>isFull()</strong> → boolean (bounded)</div>
+            <div><strong>size()</strong> → integer</div>
+            <div><strong>clear()</strong> → reset to empty</div>
+          </div>
+
+          <div>
+            <strong>Pseudocode Example</strong>
+            <pre class="mt-2 p-2 bg-gray-50 text-sm font-mono rounded overflow-x-auto">
+      class Queue:
+          head, tail, size
+      
+          method enqueue(item):
+              if isFull(): throw Error
+              node = new Node(item)
+              if tail != null: tail.next = node
+              tail = node
+              if head == null: head = node
+              size += 1
+      
+          method dequeue():
+              if isEmpty(): throw Error
+              value = head.value
+              head = head.next
+              if head == null: tail = null
+              size -= 1
+              return value
+      
+          method peek():
+              if isEmpty(): throw Error
+              return head.value
+      
+          method isEmpty(): return size == 0
+          method size(): return size
+              </pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-white rounded-lg shadow p-4 flex items-start">
+      <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+        <span class="text-gray-600 text-xl">❓</span>
+      </div>
+
+      <div class="flex-1 space-y-4">
+        <h2 class="text-lg font-semibold">Why Queues Matter</h2>
+        <div class="text-gray-700 space-y-4">
+          <p>
+            Queues are far more than a simple academic construct—they form the backbone of countless real‑world and
+            computing systems by enforcing order, decoupling components, and enabling smooth, reliable workflows.
+          </p>
+
+          <ol class="list-decimal list-inside space-y-4">
+            <li>
+              <strong>Fairness and Predictability</strong>
+              <p class="mt-1">
+                <em>First‑In, First‑Out Discipline:</em> Ensures the earliest arrived element is served first,
+                preventing newer tasks from overtaking older ones.<br />
+                <em>Avoiding Starvation:</em> Guarantees every item waits its turn, so no element is indefinitely
+                postponed (e.g., CPU scheduling in OS).
+              </p>
+            </li>
+
+            <li>
+              <strong>Decoupling Producers and Consumers</strong>
+              <p class="mt-1">
+                <em>Asynchronous Processing:</em> Buffers data so producers (e.g., web handlers) and consumers (e.g., DB
+                writers) can run at their own pace.<br />
+                <em>Backpressure Control:</em> Bounded queues signal producers to slow down or shed load when consumers
+                fall behind.
+              </p>
+            </li>
+
+            <li>
+              <strong>Scalability and Load Balancing</strong>
+              <p class="mt-1">
+                <em>Distributed Systems:</em> Middleware like Kafka or RabbitMQ uses queues to distribute work across
+                consumers and balance load.<br />
+                <em>Microservices Patterns:</em> One service enqueues tasks that another processes independently,
+                enabling each to scale or fail in isolation.
+              </p>
+            </li>
+
+            <li>
+              <strong>Reliability and Durability</strong>
+              <p class="mt-1">
+                <em>Persistent Queues:</em> Store data on disk so tasks aren’t lost on crashes—critical for financial
+                transactions, order processing, etc.<br />
+                <em>Retry Mechanisms:</em> Failed tasks can be re‑queued for later, boosting system robustness.
+              </p>
+            </li>
+
+            <li>
+              <strong>Real‑Time and Batch Processing</strong>
+              <p class="mt-1">
+                <em>Streaming Data:</em> Circular buffers and lock‑free queues handle high‑throughput streams (sensor
+                feeds, logs) with minimal latency.<br />
+                <em>Batch Jobs:</em> Workers pull tasks from queues in batches, optimizing throughput while preserving
+                order.
+              </p>
+            </li>
+
+            <li>
+              <strong>Concurrency and Thread Safety</strong>
+              <p class="mt-1">
+                <em>Concurrent Queues:</em> Thread‑safe implementations (lock‑free or blocking) let multiple threads
+                enqueue/dequeue without races.<br />
+                <em>Coordination Primitives:</em> Queues simplify producer‑consumer synchronization in concurrent
+                applications.
+              </p>
+            </li>
+
+            <li>
+              <strong>Simplified System Design</strong>
+              <p class="mt-1">
+                <em>Clear Interfaces:</em> A standardized enqueue/dequeue API abstracts low‑level details.<br />
+                <em>Modularity:</em> Inserting queues between components creates clean boundaries, easier testing, and
+                better maintainability.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-white rounded-lg shadow p-4 flex items-start">
+      <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+        <span class="text-gray-600 text-xl">📑</span>
+      </div>
+
+      <div class="flex-1 space-y-4">
+        <h2 class="text-lg font-semibold">Queue Flavors Overview</h2>
+
+        <ul class="space-y-4">
+          <li>
+            <h3 class="font-semibold">Simple FIFO Queue LinkedList</h3>
+            <p><strong>Key Feature:</strong> First‑in, first‑out ordering with O(1) enqueue/dequeue.</p>
+            <p><strong>Use Cases:</strong> Basic task scheduling, print spooling, breadth‑first search in graphs.</p>
+            <a href="TypeOfQueue/SimpleFIFOQueueLinkedList.html" class="text-blue-600 hover:underline">Learn more →</a>
+          </li>
+
+          <li>
+            <h3 class="font-semibold">Double‑Ended Queue (Deque)</h3>
+            <p><strong>Key Feature:</strong> Insert/remove at both front and back.</p>
+            <p><strong>Use Cases:</strong> Undo/redo stacks, sliding‑window algorithms, combined stack/queue behavior.
+            </p>
+            <a href="TypeOfQueue/Dequeue.html" class="text-blue-600 hover:underline">Learn more →</a>
+          </li>
+
+          <li>
+            <h3 class="font-semibold">Circular Queue</h3>
+            <p><strong>Key Feature:</strong> Fixed‑size ring buffer with wrap‑around indices.</p>
+            <p><strong>Use Cases:</strong> Embedded systems, streaming data, audio/video buffering.</p>
+            <a href="TypeOfQueue/CircularQueue.html" class="text-blue-600 hover:underline">Learn more →</a>
+          </li>
+
+          <li>
+            <h3 class="font-semibold">Priority Queue</h3>
+            <p><strong>Key Feature:</strong> Elements ordered by priority, not arrival time.</p>
+            <p><strong>Use Cases:</strong> Event simulation, Dijkstra’s algorithm, priority‑based job scheduling.</p>
+            <a href="TypeOfQueue/PriorityQueue.html" class="text-blue-600 hover:underline">Learn more →</a>
+          </li>
+
+          <li>
+            <h3 class="font-semibold">Multi‑Level Feedback Queue (MLFQ)</h3>
+            <p><strong>Key Feature:</strong> Multiple priority levels with dynamic task promotion/demotion.</p>
+            <p><strong>Use Cases:</strong> OS CPU schedulers balancing responsiveness and fairness.</p>
+            <a href="TypeOfQueue/Multi‑LevelFeedback.html" class="text-blue-600 hover:underline">Learn more →</a>
+          </li>
+
+          <li>
+            <h3 class="font-semibold">Lock‑Free Queue</h3>
+            <p><strong>Key Feature:</strong> Non‑blocking head/tail updates via atomic CAS operations.</p>
+            <p><strong>Use Cases:</strong> High‑performance concurrent systems, real‑time multithreaded apps.</p>
+            <a href="TypeOfQueue/Lock‑FreeQueue.html" class="text-blue-600 hover:underline">Learn more →</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="bg-white rounded-lg shadow p-4 flex items-start">
+      <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+        <span class="text-gray-600 text-2xl">📚</span>
+      </div>
+
+      <div class="flex-1 space-y-4">
+        <h2 class="text-lg font-semibold">Further Reading &amp; Exercises</h2>
+
+        <div class="space-y-2">
+          <h3 class="font-semibold">Academic Papers</h3>
+          <ul class="list-disc list-inside text-gray-700">
+            <li><a href="https://www.cs.rochester.edu/~scott/papers/1996_PODC_queues.pdf"
+                class="text-blue-600 hover:underline">Michael &amp; Scott’s Non‑Blocking Queue</a></li>
+            <li><a
+                href="https://kk.up45.ac.id/scholarhub/Verifying%20Michael%20and%20Scott%E2%80%99s%20Lock-Free%20Queue%20Algorithm%20using%20Trace.pdf"
+                class="text-blue-600 hover:underline">Verifying Lock‑Free Queue</a></li>
+            <li><a href="https://csaws.cs.technion.ac.il/~erez/Papers/bq-topc.pdf"
+                class="text-blue-600 hover:underline">BQ: Lock‑Free Queue with Batching</a></li>
+            <li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-mlfq.pdf"
+                class="text-blue-600 hover:underline">OSTEP: Multi‑Level Feedback Queue</a></li>
+            <li><a
+                href="https://www.researchgate.net/publication/4034783_A_study_of_a_multi-ring_buffer_management_for_BLAST"
+                class="text-blue-600 hover:underline">Multi‑Ring Buffer for BLAST</a></li>
+            <li><a
+                href="https://www.researchgate.net/publication/308707205_Efficient_implementation_of_Multilevel_Feedback_Queue_Scheduling"
+                class="text-blue-600 hover:underline">Efficient MLFQ Scheduling</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="font-semibold">Tutorials &amp; Articles</h3>
+          <ul class="list-disc list-inside text-gray-700">
+            <li><a href="https://www.geeksforgeeks.org/queue-data-structure/"
+                class="text-blue-600 hover:underline">Queue Data Structure – GeeksforGeeks</a></li>
+            <li><a href="https://www.tutorialspoint.com/data_structures_algorithms/dsa_queue.htm"
+                class="text-blue-600 hover:underline">Queue Data Structure – Tutorialspoint</a></li>
+            <li><a href="https://www.programiz.com/dsa/queue" class="text-blue-600 hover:underline">Queue Data Structure
+                – Programiz</a></li>
+            <li><a href="https://en.wikipedia.org/wiki/Queue_(abstract_data_type)"
+                class="text-blue-600 hover:underline">Queue (ADT) – Wikipedia</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="font-semibold">Exercises</h3>
+          <ol class="list-decimal list-inside text-gray-700">
+            <li>Implement &amp; benchmark blocking vs. lock‑free queues in Java under high contention.</li>
+            <li>Build a circular‑buffer visualizer animating wrap‑around behavior.</li>
+            <li>Simulate an MLFQ scheduler with dynamic job promotion/demotion.</li>
+            <li>Compare binary‑heap &amp; linked‑list priority queues on insertion/removal performance.</li>
+            <li>Stress‑test your lock‑free queue with multiple threads to verify correctness &amp; latency.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </main>
+</body>
+
+</html>

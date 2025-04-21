@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Level Feedback Queue (MLFQ)</title>
+  <link rel="icon" href="../Assets/svg/align-left-svgrepo-com.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="text-lg leading-relaxed flex flex-col min-h-screen bg-gray-100">
+
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+              Queue
+            </a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Priority Queue
+            </a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Priority Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+              Deque
+            </a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Deque Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Circular Queue
+            </a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Circular Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Lock Free Queue
+            </a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Lock Free Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+              Multi-Level Feedback Queue
+            </a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Multi-Level Feedback Queue Article
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto">
+    <div class="max-w-4xl mx-auto px-6 py-6 flex justify-center">
+      <h1 class="text-4xl font-bold text-gray-800">Multi-Level Feedback Queue (MLFQ)</h1>
+    </div>
+
+    <div class="container mx-auto px-6 pb-12 space-y-8">
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-2xl font-semibold mb-4">Introduction</h2>
+        <p class="text-gray-700">
+          The Multi-Level Feedback Queue (MLFQ) is an advanced scheduling algorithm used in operating systems to manage
+          processes in a way that dynamically adjusts the priority of processes based on their behavior and age. The
+          goal of MLFQ is to provide both fairness and responsiveness in a multitasking environment, ensuring that
+          high-priority tasks are handled promptly, while also preventing lower-priority tasks from being starved.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Key Features of MLFQ</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Multiple Queues:</strong> MLFQ uses multiple queues with different priority levels. The
+            highest-priority queue (Queue 0) handles time-sensitive tasks, while lower-priority queues (Queue 1, Queue
+            2, etc.) handle less critical processes.</li>
+          <li><strong>Time Quantum:</strong> Each queue is assigned a time quantum, which typically decreases as
+            priority decreases. Higher-priority queues get smaller time quanta.</li>
+          <li><strong>Dynamic Adjustment of Priority:</strong> Processes are moved between queues based on their
+            behavior. If a process doesn't finish within its time quantum, it is moved to a lower-priority queue.</li>
+          <li><strong>Starvation Avoidance:</strong> Processes that spend too much time in lower-priority queues are
+            gradually moved back to higher-priority queues to avoid starvation.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">How MLFQ Works</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Initial Placement:</strong> When a process enters, it is placed in the highest-priority queue. If
+            it doesn’t complete within its time quantum, it moves to the next lower-priority queue.</li>
+          <li><strong>Feedback and Aging:</strong> Processes that are time-sensitive get higher priority, while
+            long-waiting processes are moved up to avoid starvation.</li>
+          <li><strong>Execution Order:</strong> The scheduler first looks at the highest-priority queue and processes
+            tasks there. If empty, it moves to lower-priority queues.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Example Use Case</h3>
+        <p class="text-gray-700 mb-4">
+          In a system where multiple tasks are running, interactive tasks (like UI updates) are placed in Queue 0 for
+          quick processing. Batch tasks (background calculations) are placed in Queue 1 or lower-priority queues. This
+          ensures that high-priority tasks are handled promptly while still allowing batch tasks to execute.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Advantages of MLFQ</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Fairness:</strong> By dynamically adjusting priorities, MLFQ prevents starvation and ensures
+            fairness for all tasks.</li>
+          <li><strong>Efficiency:</strong> MLFQ prioritizes interactive tasks, providing quick response times while
+            processing less time-critical tasks efficiently.</li>
+          <li><strong>Adaptability:</strong> MLFQ adapts to different workloads, making it flexible and efficient for
+            various types of tasks.</li>
+          <li><strong>Real-Time Consideration:</strong> The system ensures that time-sensitive tasks are handled
+            promptly, making it suitable for real-time systems.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Disadvantages of MLFQ</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Complexity:</strong> Implementing MLFQ can be complex due to the need to manage multiple queues
+            and dynamically adjust priorities.</li>
+          <li><strong>Overhead:</strong> Managing multiple queues and adjusting priorities can introduce overhead, which
+            may not be ideal for some systems.</li>
+          <li><strong>Tuning Parameters:</strong> Incorrect configuration of queues, time quanta, and aging mechanisms
+            can lead to inefficiencies.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Use Cases of MLFQ</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Operating Systems:</strong> MLFQ is widely used for multitasking in operating systems to handle
+            both interactive and background tasks.</li>
+          <li><strong>Real-Time Systems:</strong> MLFQ helps ensure time-sensitive tasks, such as controlling hardware
+            or monitoring sensors, are handled quickly.</li>
+          <li><strong>Interactive Systems:</strong> MLFQ is ideal for systems like graphical user interfaces (GUIs)
+            where interactive tasks need higher priority than background tasks.</li>
+          <li><strong>Multitasking Systems:</strong> MLFQ adjusts dynamically to prioritize tasks and manage resources
+            efficiently in multitasking environments.</li>
+        </ul>
+
+        <p class="text-gray-700">
+          The Multi-Level Feedback Queue (MLFQ) is a highly effective scheduling algorithm, balancing responsiveness and
+          fairness. Its ability to dynamically adjust priorities based on task behavior makes it ideal for multitasking
+          and real-time systems. Though it can be complex to implement, its benefits in handling diverse workloads and
+          ensuring fairness make it a popular choice in modern operating systems and real-time applications.
+        </p>
+      </section>
+
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="w-full h-full bg-white rounded-lg shadow-lg flex flex-col overflow-y-auto">
+
+
+        <div class="flex-1 p-6 overflow-visible">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              <img src="../Assets/svg/coffee-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+            </div>
+            <h2 class="text-xl font-semibold">History of Multi-Level Feedback Queue (MLFQ)</h2>
+          </div>
+
+          <p class="text-gray-700 mb-6">
+            The Multi-Level Feedback Queue (MLFQ) scheduling algorithm was introduced to address inefficiencies in
+            earlier algorithms like First-Come, First-Served (FCFS) and Round Robin (RR). These algorithms struggled
+            with managing systems that required dynamic adjustments, such as handling both interactive and
+            non-interactive processes. MLFQ combines dynamic priority adjustments with multiple queues, enabling it to
+            efficiently allocate CPU time to tasks based on their behavior and urgency.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">Early Task Scheduling Algorithms</h3>
+          <p class="text-gray-700 mb-4">
+            In the 1950s and 1960s, as multitasking capabilities emerged, task scheduling algorithms like FCFS and RR
+            became prevalent. However, both algorithms had critical limitations:
+          </p>
+          <ul class="list-disc list-inside text-gray-700 mb-4">
+            <li><strong>FCFS:</strong> A simple algorithm that processed tasks in the order they arrived, but it lacked
+              prioritization, leading to inefficiencies like starvation for shorter, more critical tasks. Long-running
+              tasks often blocked shorter, time-sensitive tasks from being processed promptly.</li>
+            <li><strong>Round Robin (RR):</strong> Gave tasks a fixed time slice but didn’t efficiently handle
+              interactive tasks. Small tasks could be delayed unnecessarily, while long tasks monopolized the CPU. This
+              inefficiency became more evident as systems became more complex with both interactive and non-interactive
+              workloads.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">The Emergence of MLFQ in the 1970s</h3>
+          <p class="text-gray-700 mb-4">
+            MLFQ was introduced to solve the limitations of FCFS and RR by dynamically adjusting process priorities. It
+            integrates elements of both **priority scheduling** and **Round Robin** but introduces flexibility through
+            multiple queues and a feedback mechanism. The key idea behind MLFQ is that a process's priority is not
+            fixed; it is adjusted based on its behavior. Processes that require immediate attention (such as interactive
+            tasks) are given higher priority, while long-running tasks can be relegated to lower-priority queues.
+          </p>
+          <p class="text-gray-700 mb-4">
+            The dynamic priority adjustment allows MLFQ to ensure that system responsiveness is maintained, preventing
+            high-priority interactive tasks from being delayed by low-priority batch tasks. In the 1970s, MLFQ was an
+            essential advancement, providing fair allocation of system resources while optimizing task management for
+            real-time systems and operating systems.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">Key Milestones in the History of MLFQ</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-6">
+            <li><strong>1970s:</strong> The early development of priority-based scheduling algorithms inspired the
+              concept of MLFQ. Researchers and engineers focused on systems where the scheduler dynamically adjusted the
+              priority of tasks based on their characteristics, such as CPU burst times and interactivity.</li>
+            <li><strong>1980s-1990s:</strong> Unix-like operating systems, including Solaris and BSD, started adopting
+              priority-based scheduling and hybrid algorithms similar to MLFQ. These systems needed to manage both
+              interactive and non-interactive processes, driving the demand for MLFQ-like mechanisms to optimize
+              multitasking.</li>
+            <li><strong>2000s-Present:</strong> Modern Linux and Windows schedulers integrate MLFQ-like concepts, often
+              enhanced with features like load balancing, processor affinity, and real-time scheduling adjustments.
+              These modern schedulers dynamically adjust process priorities, improving system responsiveness in
+              real-time environments.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Use Cases of MLFQ</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-6">
+            <li><strong>Operating System Task Scheduling:</strong> MLFQ is most commonly used in general-purpose
+              operating systems to handle multitasking. It allows interactive tasks, like UI operations, to get priority
+              over background tasks, ensuring that user input is always responsive.</li>
+            <li><strong>Real-Time Systems:</strong> In real-time systems like robotics or embedded systems, MLFQ ensures
+              that critical tasks, like controlling hardware or managing sensors, are processed without delays, while
+              non-essential tasks are processed in lower-priority queues.</li>
+            <li><strong>Multimedia Systems:</strong> In multimedia systems, MLFQ helps prioritize real-time audio and
+              video processing, ensuring tasks such as streaming and rendering receive quick CPU attention to maintain
+              smooth playback.</li>
+            <li><strong>Interactive Systems:</strong> MLFQ ensures that GUI applications, such as video games and
+              interactive media, prioritize user input and rendering tasks, guaranteeing smooth, real-time experiences
+              for users.</li>
+            <li><strong>Server-Side Applications:</strong> In web servers or database systems, MLFQ can prioritize tasks
+              like serving requests for dynamic content while handling background tasks (such as data syncing or log
+              writing) in lower-priority queues.</li>
+          </ul>
+
+          <p class="text-gray-700">
+            The MLFQ scheduling algorithm represents a dynamic, efficient approach to process scheduling. It allows
+            systems to adapt to varying task requirements, providing high responsiveness for interactive tasks while
+            ensuring that batch and background processes do not starve. By adjusting priorities based on task behavior,
+            MLFQ offers a fair and efficient solution for managing diverse workloads, making it a core component of
+            modern operating systems and real-time systems.
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="w-full h-full bg-white rounded-lg shadow-lg flex flex-col overflow-y-auto">
+
+        <div class="flex-1 p-6 overflow-visible">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              <img src="../Assets/svg/monitor-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+            </div>
+            <h2 class="text-xl font-semibold">Multi-Level Feedback Queue (MLFQ) Implemented by Linked List
+            </h2>
+          </div>
+
+          <p class="text-gray-700 mb-6">
+            The Multi-Level Feedback Queue (MLFQ) scheduling algorithm can be implemented using a linked list for each
+            queue in the system. The use of linked lists allows for efficient insertion and removal of processes, making
+            it ideal for systems where tasks with different priorities need to be handled dynamically.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">Overview of MLFQ with Linked List Implementation</h3>
+          <p class="text-gray-700 mb-4">
+            In an MLFQ system, processes are assigned to different queues based on their priority. These queues are
+            dynamically adjusted based on the processes' behavior (e.g., CPU burst time, response time, or time spent
+            waiting). This feedback mechanism allows the system to prioritize interactive tasks while ensuring fairness
+            for background tasks. Each queue is implemented as a linked list, and processes are managed in order of
+            their priority.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">Key Operations of MLFQ with Linked List</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-6">
+            <li><strong>Enqueue (Insert Process into Queue):</strong> Processes are inserted into a queue based on their
+              priority. Higher-priority processes are inserted at the front, while lower-priority ones go to the rear.
+            </li>
+            <li><strong>Dequeue (Remove Process from Queue):</strong> The process at the front (highest priority) is
+              dequeued. If a process doesn't finish within its time quantum, it is moved to a lower-priority queue.</li>
+            <li><strong>Peek (View Front Process):</strong> Allows the scheduler to view the front process without
+              removing it from the queue.</li>
+            <li><strong>Process Aging:</strong> Processes waiting in lower-priority queues are gradually moved to
+              higher-priority queues to prevent starvation.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Structure of MLFQ Implemented by Linked List</h3>
+          <p class="text-gray-700 mb-4">
+            Each queue in the MLFQ is represented as a linked list where each node contains:
+          </p>
+          <ul class="list-disc list-inside text-gray-700 mb-6">
+            <li><strong>Process ID:</strong> Identifies the process.</li>
+            <li><strong>Process State:</strong> Indicates whether the process is ready, waiting, running, etc.</li>
+            <li><strong>Priority Level:</strong> Indicates the process priority.</li>
+            <li><strong>Time Remaining:</strong> Tracks the remaining execution time or time quantum.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Operations in Detail</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-6">
+            <li><strong>Enqueue:</strong> Insert a new process into the highest priority queue. If a lower priority
+              process exceeds its time quantum, it is moved to a lower-priority queue.</li>
+            <li><strong>Dequeue:</strong> Remove the front process, and if it doesn’t finish its quantum, it is moved to
+              a lower priority queue.</li>
+            <li><strong>Peek:</strong> View the process with the highest priority without dequeuing it.</li>
+            <li><strong>Process Aging:</strong> Prevent starvation by moving long-waiting processes to higher-priority
+              queues.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Example Implementation in Pseudocode</h3>
+          <pre class="bg-gray-100 p-4 rounded-md text-sm mb-6">
+  class Process {
+      int processId;
+      int priority;
+      int remainingTime;
+      Process next;
+  }
+  
+  class MLFQ {
+      LinkedList[] queues;   // Array of LinkedLists, each representing a priority queue
+      int numQueues;
+  
+      MLFQ(int numQueues) {
+          this.numQueues = numQueues;
+          queues = new LinkedList[numQueues];
+          for (int i = 0; i < numQueues; i++) {
+              queues[i] = new LinkedList();
+          }
+      }
+  
+      // Enqueue: Add process to the appropriate queue based on its priority
+      void enqueue(Process process) {
+          int queueIndex = process.priority;
+          queues[queueIndex].addToFront(process);  // Add to the front for higher priority
+      }
+  
+      // Dequeue: Remove and return the process with the highest priority
+      Process dequeue() {
+          for (int i = 0; i < numQueues; i++) {
+              if (!queues[i].isEmpty()) {
+                  Process process = queues[i].removeFromFront();
+                  return process;
+              }
+          }
+          return null; // No processes to dequeue
+      }
+  
+      // Move a process to a lower priority queue (if it doesn't finish its time quantum)
+      void moveToLowerPriorityQueue(Process process) {
+          if (process.priority < numQueues - 1) {
+              process.priority++;
+              enqueue(process); // Enqueue it into the next lower priority queue
+          }
+      }
+  
+      // Aging: Gradually promote processes in lower priority queues to higher ones
+      void promoteProcess(Process process) {
+          if (process.priority > 0) {
+              process.priority--;
+              enqueue(process);  // Move process to a higher priority queue
+          }
+      }
+  
+      // Peek: View the front process of the highest priority queue
+      Process peek() {
+          for (int i = 0; i < numQueues; i++) {
+              if (!queues[i].isEmpty()) {
+                  return queues[i].peekFront(); // Return the front process without removal
+              }
+          }
+          return null;
+      }
+  }
+        </pre>
+
+          <h3 class="text-xl font-semibold mb-2">Advantages of MLFQ Implemented by Linked List</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-6">
+            <li><strong>Dynamic Size:</strong> Linked lists allow for dynamic insertion and removal of processes, which
+              makes memory usage efficient.</li>
+            <li><strong>Efficient Task Scheduling:</strong> The system handles different priority levels, ensuring
+              high-priority tasks are executed promptly while maintaining fairness.</li>
+            <li><strong>Flexibility:</strong> The dynamic priority adjustment based on task behavior makes the system
+              adaptable to various workloads.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Disadvantages</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-6">
+            <li><strong>Pointer Overhead:</strong> Each node in the linked list requires extra memory for pointers,
+              resulting in higher memory usage compared to array-based implementations.</li>
+            <li><strong>Slow Access for Non-Front Operations:</strong> Operations like moving processes between queues
+              may require O(n) time due to list traversal.</li>
+          </ul>
+
+          <p class="text-gray-700">
+            An MLFQ implemented by a linked list offers flexibility and dynamic memory management for process scheduling
+            in systems with mixed workloads. While it introduces pointer overhead and inefficiencies in some operations,
+            it remains a powerful solution for tasks requiring dynamic priority adjustments, especially in real-time or
+            interactive systems.
+          </p>
+
+          <div class="mt-6 text-center">
+            <a href="Multi-LevelFeedback.html"
+              class="inline-block bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition">
+              Go to Visualization
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </main>
+</body>
+
+</html>

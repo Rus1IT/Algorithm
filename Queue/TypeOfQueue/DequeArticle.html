@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Double‑Ended Queue (Deque)</title>
+  <link rel="icon" href="../Assets/svg/align-text-left-svgrepo-com.svg" type="image/svg+xml" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="text-lg leading-relaxed flex flex-col min-h-screen bg-gray-100">
+
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+              Queue
+            </a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Priority Queue
+            </a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Priority Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+              Deque
+            </a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Deque Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Circular Queue
+            </a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Circular Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Lock Free Queue
+            </a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Lock Free Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+              Multi-Level Feedback Queue
+            </a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Multi-Level Feedback Queue Article
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto">
+    <div class="max-w-2xl mx-auto px-6 py-6">
+      <h1 class="text-4xl font-bold text-gray-800">Double‑Ended Queue (Deque)</h1>
+    </div>
+
+    <div class="container mx-auto px-6 pb-12 space-y-8">
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="w-full h-32 overflow-hidden">
+          <img src="https://cdn.programiz.com/sites/tutorial2program/files/deque.png" alt="Deque Illustration"
+            class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              <img src="../Assets/svg/api-interface-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+            </div>
+            <h2 class="text-xl font-semibold">Double‑Ended Queue (Deque)</h2>
+          </div>
+          <p class="text-gray-700 mb-4">
+            A deque (pronounced “deck”) is a versatile linear collection permitting additions and removals at both front
+            and back in O(1) time. It blends FIFO queue and LIFO stack behaviors to support a wide range of algorithmic
+            patterns.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <h3 class="font-semibold">addFirst(item)</h3>
+              <p class="text-gray-700">Inserts at the very front. Useful for priority inversion and undo/redo patterns.
+              </p>
+            </div>
+            <div>
+              <h3 class="font-semibold">addLast(item)</h3>
+              <p class="text-gray-700">Appends at the rear. Maintains arrival order for batching and stream processing.
+              </p>
+            </div>
+            <div>
+              <h3 class="font-semibold">removeFirst()</h3>
+              <p class="text-gray-700">Removes from the front. Preserves FIFO semantics for fair task scheduling.</p>
+            </div>
+            <div>
+              <h3 class="font-semibold">removeLast()</h3>
+              <p class="text-gray-700">Removes from the rear. Enables LIFO backtracking and sliding‑window trimming.</p>
+            </div>
+          </div>
+
+          <h3 class="font-semibold mb-2">Java Pseudocode</h3>
+          <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-6">
+class Deque&lt;T&gt; {
+    Node&lt;T&gt; head, tail;
+
+    void addFirst(T item) { /* link new node before head */ }
+    void addLast(T item)  { /* link new node after tail */ }
+    T removeFirst()       { /* unlink head node */ }
+    T removeLast()        { /* unlink tail node */ }
+    boolean isEmpty()     { return head == null; }
+}
+      </pre>
+        </div>
+
+      </div>
+
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="w-full h-full bg-white rounded-lg shadow-lg flex flex-col overflow-hidden">
+        <div class="w-full grid grid-cols-4 gap-2">
+          <img src="../Assets//generatedDequeImage1.png" alt="Deque Use Case 1"
+            class="w-full aspect-square object-cover" />
+          <img src="../Assets/generatedDequeImage2.png" alt="Deque Use Case 2"
+            class="w-full aspect-square object-cover" />
+          <img src="../Assets/generatedDequeImage3.png" alt="Deque Use Case 3"
+            class="w-full aspect-square object-cover" />
+          <img src="../Assets/generatedDequeImage4.png" alt="Deque Use Case 4"
+            class="w-full aspect-square object-cover" />
+        </div>
+
+
+
+
+        <div class="flex-1 p-6 overflow-auto">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              <img src="../Assets/svg/availability-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+            </div>
+            <h2 class="text-xl font-semibold">History</h2>
+          </div>
+
+          <div class="mb-8">
+            <h3 class="text-xl font-semibold mb-2">1. Undo/Redo Stacks</h3>
+            <p class="text-gray-700 mb-4">
+              Applications ranging from text editors to graphic design tools rely on undo/redo functionality to let
+              users backtrack or reapply recent actions. A deque elegantly supports this by maintaining two ends:
+            </p>
+            <h4 class="font-semibold mb-1">Recording Actions:</h4>
+            <p class="text-gray-700 ml-4 mb-2">
+              When the user performs a new operation, it’s added to the front (<code class="font-mono">addFirst</code>)
+              of the deque. This makes the most recent action immediately available for undo.
+            </p>
+            <h4 class="font-semibold mb-1">Undoing an Action:</h4>
+            <p class="text-gray-700 ml-4 mb-2">
+              The app removes from the front (<code class="font-mono">removeFirst</code>) to retrieve and reverse the
+              last operation. That action is then appended to the rear (<code class="font-mono">addLast</code>) of a
+              “redo” deque, preserving its original order for potential reapplication.
+            </p>
+            <h4 class="font-semibold mb-1">Redoing an Action:</h4>
+            <p class="text-gray-700 ml-4">
+              When the user requests a redo, the app removes from the rear (<code class="font-mono">removeLast</code>)
+              of the redo deque—yielding the earliest‑undone action—and reapplies it. That action can then be re‑added
+              to the front of the undo deque, restoring its place in history.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-2">2. Sliding‑Window Algorithms</h3>
+            <p class="text-gray-700 mb-4">
+              Sliding‑window techniques process data by looking at a contiguous subarray (window) of fixed size that
+              moves across the dataset. Common tasks include computing the maximum, minimum, or average within each
+              window—useful in signal processing, real‑time analytics, and time‑series smoothing. A deque optimizes
+              these tasks by:
+            </p>
+            <h4 class="font-semibold mb-1">Maintaining Candidates:</h4>
+            <p class="text-gray-700 ml-4 mb-2">
+              As the window slides, new elements enter at the rear (<code class="font-mono">addLast</code>), and
+              elements leaving the window are removed from the front (<code class="font-mono">removeFirst</code>).
+            </p>
+            <p class="text-gray-700 ml-4 mb-2">
+              To compute, for example, the maximum in O(1) time per step, the deque holds indices (or values) in
+              decreasing order: before adding a new element, pop from the rear (<code
+                class="font-mono">removeLast</code>) while the new element is larger, discarding dominated candidates.
+              This ensures that the front always holds the index of the current window’s maximum.
+            </p>
+            <h4 class="font-semibold mb-1">Efficient Updates:</h4>
+            <p class="text-gray-700 ml-4 mb-2">
+              Each element is added and removed at most once, yielding an overall O(n) time algorithm for an array of
+              length n, far superior to naïve O(n·k) approaches.
+            </p>
+            <p class="text-gray-700 ml-4">
+              The deque’s constant‑time operations keep the sliding‑window overhead minimal, ideal for high‑throughput
+              or real‑time streams.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="w-full h-full bg-white rounded-lg shadow-lg flex flex-col overflow-hidden">
+
+        <div class="flex-1 p-6 overflow-auto">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              <img src="../Assets/svg/page-analysis-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+            </div>
+            <h2 class="text-xl font-semibold">Double‑Ended Queue by LinkedList</h2>
+          </div>
+
+          <div>
+            <p class="text-gray-700 mb-4">
+              A deque built on a doubly‑linked list uses nodes that each contain a value plus two pointers: <code
+                class="font-mono">prev</code> and <code class="font-mono">next</code>. Two sentinel references—<code
+                class="font-mono">head</code> (front) and <code class="font-mono">tail</code> (rear)—track the ends.
+            </p>
+
+            <h3 class="text-lg font-semibold mb-2">Structure Overview</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-4">
+              <li>Each <code class="font-mono">Node&lt;T&gt;</code> holds <code class="font-mono">data</code>, <code
+                  class="font-mono">prev</code>, and <code class="font-mono">next</code>.</li>
+              <li><code class="font-mono">head</code> points to the front node; <code class="font-mono">tail</code> to
+                the rear.</li>
+              <li>Empty deque: both <code class="font-mono">head</code> and <code class="font-mono">tail</code> are
+                <code>null</code>.
+              </li>
+            </ul>
+
+            <h3 class="text-lg font-semibold mb-2">Operations (O(1) each)</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-4">
+              <li>
+                <strong>addFirst(item):</strong>
+                Create node → link its <code class="font-mono">next</code> to old head → update old head’s <code
+                  class="font-mono">prev</code> → set <code class="font-mono">head</code>.
+              </li>
+              <li>
+                <strong>addLast(item):</strong>
+                Create node → link its <code class="font-mono">prev</code> to old tail → update old tail’s <code
+                  class="font-mono">next</code> → set <code class="font-mono">tail</code>.
+              </li>
+              <li>
+                <strong>removeFirst():</strong>
+                Unlink old head → set <code class="font-mono">head</code> to <code class="font-mono">head.next</code> →
+                clear new head’s <code class="font-mono">prev</code>.
+              </li>
+              <li>
+                <strong>removeLast():</strong>
+                Unlink old tail → set <code class="font-mono">tail</code> to <code class="font-mono">tail.prev</code> →
+                clear new tail’s <code class="font-mono">next</code>.
+              </li>
+            </ul>
+
+            <h3 class="text-lg font-semibold mb-2">Java Code Example</h3>
+            <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-4">
+class Node&lt;T&gt; {
+    T data;
+    Node&lt;T&gt; prev, next;
+    Node(T data) { this.data = data; }
+}
+
+class Deque&lt;T&gt; {
+    private Node&lt;T&gt; head, tail;
+
+    public void addFirst(T item) {
+        Node&lt;T&gt; node = new Node&lt;&gt;(item);
+        if (head != null) {
+            node.next = head;
+            head.prev = node;
+        } else {
+            tail = node;
+        }
+        head = node;
+    }
+
+    public void addLast(T item) {
+        Node&lt;T&gt; node = new Node&lt;&gt;(item);
+        if (tail != null) {
+            tail.next = node;
+            node.prev = tail;
+        } else {
+            head = node;
+        }
+        tail = node;
+    }
+
+    public T removeFirst() {
+        if (head == null) throw new NoSuchElementException();
+        T val = head.data;
+        head = head.next;
+        if (head != null) head.prev = null;
+        else tail = null;
+        return val;
+    }
+
+    public T removeLast() {
+        if (tail == null) throw new NoSuchElementException();
+        T val = tail.data;
+        tail = tail.prev;
+        if (tail != null) tail.next = null;
+        else head = null;
+        return val;
+    }
+}
+        </pre>
+
+            <h3 class="text-lg font-semibold mb-2">Advantages & Considerations</h3>
+            <ul class="list-disc list-inside text-gray-700">
+              <li><strong>Unbounded size:</strong> Only limited by memory.</li>
+              <li><strong>Constant-time operations:</strong> No resizing or shifting required.</li>
+              <li><strong>Clear pointer logic:</strong> Easy to reason about prev/next links.</li>
+              <li><strong>Memory overhead:</strong> Two pointers per node.</li>
+              <li><strong>Allocator cost:</strong> Frequent node allocations can impact performance in high-throughput
+                contexts.</li>
+            </ul>
+            <div class="mt-6 text-center">
+              <a href="Deque.html"
+                class="inline-block bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition">
+                Go to Visualization
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </main>
+</body>
+
+</html>

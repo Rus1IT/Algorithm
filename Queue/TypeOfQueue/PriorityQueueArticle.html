@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Priority Queue</title>
+  <link rel="icon" href="../Assets/svg/arrow-down-short-wide-svgrepo-com.svg" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .vertical-text {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+
+<body class="text-lg leading-relaxed flex flex-col min-h-screen bg-gray-100">
+
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+              Queue
+            </a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Priority Queue
+            </a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Priority Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+              Deque
+            </a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Deque Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Circular Queue
+            </a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Circular Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Lock Free Queue
+            </a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Lock Free Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+              Multi-Level Feedback Queue
+            </a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Multi-Level Feedback Queue Article
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto">
+    <div class="max-w-4xl mx-auto px-6 py-6 flex justify-center">
+      <h1 class="text-4xl font-bold text-gray-800">Priority Queue</h1>
+    </div>
+
+    <section class="container mx-auto px-6 pb-12">
+      <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Overview of Priority Queue</h2>
+        <p class="text-gray-700 leading-relaxed">
+          A priority queue is a data structure that operates similarly to a regular queue, but with an added twist: each
+          element is assigned a priority. In a regular queue, elements are processed in First In, First Out (FIFO)
+          order. However, in a priority queue, elements with higher priority are dequeued before those with lower
+          priority, regardless of the order they were added.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Key Concepts</h3>
+        <p class="text-gray-700 mb-4">
+          Priority: Each element in a priority queue has a priority value associated with it. This value determines the
+          order in which the elements are processed. Elements with higher priority are dequeued before those with lower
+          priority, even if the lower priority elements were added earlier.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Heap Implementation</h3>
+        <p class="text-gray-700 mb-4">
+          Most priority queues are implemented using heaps (binary heaps, specifically), a complete binary tree that
+          satisfies the heap property: for a max-heap, each parent node’s value is greater than or equal to the values
+          of its children. This property ensures that the element with the highest priority is always at the root.
+        </p>
+
+        <h3 class="text-xl font-semibold mb-2">Operations of a Priority Queue</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Insert (enqueue):</strong> Adds an element to the queue with a specific priority. <span
+              class="text-sm text-gray-500">Time complexity: O(log n)</span></li>
+          <li><strong>Remove (dequeue):</strong> Removes and returns the element with the highest priority. <span
+              class="text-sm text-gray-500">Time complexity: O(log n)</span></li>
+          <li><strong>Peek:</strong> Returns the element with the highest priority without removing it from the queue.
+            <span class="text-sm text-gray-500">Time complexity: O(1)</span></li>
+          <li><strong>IsEmpty:</strong> Checks if the priority queue is empty. <span class="text-sm text-gray-500">Time
+              complexity: O(1)</span></li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Types of Priority Queues</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Max Priority Queue:</strong> The element with the largest priority value is dequeued first.</li>
+          <li><strong>Min Priority Queue:</strong> The element with the smallest priority value is dequeued first.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Example Use Cases of Priority Queues</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Task Scheduling:</strong> In operating systems, processes with higher priority must be executed
+            first. A priority queue ensures that tasks with higher priority are always processed first, regardless of
+            when they arrive.</li>
+          <li><strong>Dijkstra’s Algorithm:</strong> In graph algorithms, a priority queue is used to efficiently select
+            the next vertex to visit based on the shortest distance (priority).</li>
+          <li><strong>Huffman Coding:</strong> Priority queues are used in data compression algorithms, such as Huffman
+            coding, to build the optimal encoding tree based on frequency of symbols.</li>
+          <li><strong>Event Simulation:</strong> In discrete event simulation, events with the earliest time are
+            processed first, but some events may have higher importance (priority). A priority queue helps manage these
+            events efficiently.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Time Complexity in a Heap-based Priority Queue</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Insert (enqueue):</strong> O(log n)</li>
+          <li><strong>Remove (dequeue):</strong> O(log n)</li>
+          <li><strong>Peek:</strong> O(1)</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-2">Trade-offs and Considerations</h3>
+        <ul class="list-disc list-inside text-gray-700 mb-6">
+          <li><strong>Efficiency:</strong> Priority queues are highly efficient for certain tasks, such as scheduling
+            and graph algorithms, because they allow the insertion and removal of elements in logarithmic time.</li>
+          <li><strong>Memory Overhead:</strong> The priority queue implementation based on heaps may have additional
+            memory overhead compared to simple queues since it needs to maintain a structure like a heap or a binary
+            tree.</li>
+        </ul>
+
+        <p class="text-gray-700">
+          A priority queue is an essential data structure when tasks or elements need to be processed in a specific
+          order based on their importance or urgency. It differs from a regular queue by introducing priorities,
+          enabling more complex task scheduling and event handling in various applications, especially in algorithms and
+          system management tasks.
+        </p>
+      </div>
+      </div>
+      </div>
+
+
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="w-full h-full bg-white rounded-lg shadow-lg flex flex-col overflow-y-auto">
+
+          <div class="flex-1 p-6 overflow-visible">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                <img src="../Assets/svg/genetic-algorithm-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+              </div>
+              <h2 class="text-xl font-semibold">History of Priority Queue</h2>
+            </div>
+
+            <p class="text-gray-700 mb-6">
+              The priority queue as a concept has its origins in early computer science and data structure theory. It
+              was primarily developed to efficiently manage tasks or data based on their importance, with each element
+              assigned a priority. The need for such data structures became evident in systems where certain tasks must
+              be processed before others, even if they arrived later.
+            </p>
+
+            <h3 class="text-xl font-semibold mb-2">Early Development (1950s - 1960s)</h3>
+            <p class="text-gray-700 mb-4">
+              The idea of a priority queue emerged as computers and operating systems began to manage multiple tasks. In
+              early systems, processes were managed in a FIFO (First In, First Out) manner, but as multitasking and
+              real-time scheduling became more important, the need arose to prioritize certain tasks over others.
+            </p>
+            <p class="text-gray-700 mb-4">
+              In the late 1950s and early 1960s, task scheduling in operating systems led to the development of the
+              priority queue. Initially, priority queues were implemented using simple data structures like sorted lists
+              or unsorted arrays, but these methods were inefficient for large numbers of tasks.
+            </p>
+
+            <h3 class="text-xl font-semibold mb-2">Introduction of Heaps (1960s)</h3>
+            <p class="text-gray-700 mb-4">
+              The breakthrough in priority queue efficiency came with the introduction of the heap data structure,
+              particularly the binary heap, by J. W. J. Williams in 1964. Heaps allowed for efficient insertion and
+              deletion operations, with both operations having a time complexity of O(log n).
+            </p>
+            <p class="text-gray-700 mb-4">
+              The binary heap provided a structured way to implement a priority queue, where the max-heap (or min-heap)
+              property ensured that the highest (or lowest) priority element was always at the root. This structure
+              significantly improved the performance of priority queues and made them practical for large-scale use
+              cases like task scheduling and graph algorithms.
+            </p>
+
+            <h3 class="text-xl font-semibold mb-2">Evolution of Priority Queues (1970s - 1990s)</h3>
+            <p class="text-gray-700 mb-4">
+              By the 1970s and 1980s, priority queues became integral to operating systems, where they were used for CPU
+              scheduling and resource allocation. Priority queues helped ensure that high-priority processes were
+              executed before lower-priority ones, improving the system’s efficiency and responsiveness.
+            </p>
+            <p class="text-gray-700 mb-4">
+              In the 1990s, priority queues became more widely used in algorithms, such as Dijkstra’s shortest path
+              algorithm, A* search algorithm, and Huffman coding for data compression. These algorithms used priority
+              queues to manage the order in which elements (such as nodes or events) were processed based on their
+              priority values.
+            </p>
+
+            <h3 class="text-xl font-semibold mb-2">Use Cases of Priority Queues</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-6">
+              <li><strong>Operating System Scheduling:</strong> A priority queue ensures high-priority tasks are
+                processed first in multitasking operating systems.</li>
+              <li><strong>Graph Algorithms:</strong> Priority queues help efficiently manage vertices in graph
+                algorithms like Dijkstra’s algorithm.</li>
+              <li><strong>Huffman Coding:</strong> In data compression, priority queues help build the optimal Huffman
+                tree based on character frequencies.</li>
+              <li><strong>Event Simulation:</strong> Priority queues ensure that events are processed based on the
+                earliest timestamp in simulation systems.</li>
+              <li><strong>Network Routing:</strong> Priority queues help maintain routing tables and ensure optimal
+                routing decisions in network protocols.</li>
+              <li><strong>Real-Time Systems:</strong> Priority queues manage tasks in real-time systems, ensuring
+                critical tasks are processed first.</li>
+            </ul>
+
+            <p class="text-gray-700">
+              The priority queue data structure has evolved significantly since its introduction, becoming an
+              indispensable tool in a wide variety of applications. Its ability to manage elements based on priority
+              rather than arrival time makes it suitable for a range of use cases, from task scheduling and network
+              routing to graph algorithms and real-time systems. The history of priority queues is closely tied to the
+              development of efficient scheduling algorithms, optimization techniques, and real-time systems, cementing
+              its place as a core data structure in computer science.
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="w-full h-full bg-white rounded-lg shadow-lg flex flex-col overflow-y-auto">
+
+          <div class="flex-1 p-6 overflow-visible">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                <img src="../Assets/svg/genetic-research-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+              </div>
+              <h2 class="text-xl font-semibold">Structure of a Priority Queue Using Linked List</h2>
+            </div>
+
+            <p class="text-gray-700 mb-6">
+              A priority queue implemented using a linked list is an alternative to the more common heap-based
+              implementation. In a linked list-based priority queue, the elements are stored in a sorted order based on
+              their priority, and the element with the highest (or lowest) priority is always at the front of the list.
+            </p>
+
+            <h3 class="text-xl font-semibold mb-2">Structure of a Priority Queue Using Linked List</h3>
+            <p class="text-gray-700 mb-4">
+              In a linked list-based priority queue, each node contains:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 mb-6">
+              <li><strong>Data:</strong> The element to be stored.</li>
+              <li><strong>Priority:</strong> A value that determines the priority of the element.</li>
+              <li><strong>Next:</strong> A pointer to the next node in the queue.</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mb-2">Operations of a Priority Queue Using Linked List</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-6">
+              <li><strong>Enqueue (Add an element):</strong> Adds an element in a sorted order based on its priority.
+                Time complexity: O(n) as we traverse to find the correct position.</li>
+              <li><strong>Dequeue (Remove the element with the highest priority):</strong> Removes the element at the
+                head (highest priority). Time complexity: O(1) since it’s at the front of the list.</li>
+              <li><strong>Peek:</strong> Returns the element with the highest priority without removing it. Time
+                complexity: O(1) because it's at the front.</li>
+              <li><strong>isEmpty:</strong> Checks if the queue is empty. Time complexity: O(1).</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mb-2">Example Implementation in Pseudocode</h3>
+            <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-4">
+  class Node {
+      int value;      // The value of the node
+      int priority;   // The priority of the node
+      Node next;      // Pointer to the next node
+  }
+  
+  class PriorityQueue {
+      Node head = null;  // The head of the linked list
+  
+      // Enqueue: Add an element to the queue based on its priority
+      void enqueue(int value, int priority) {
+          Node newNode = new Node();
+          newNode.value = value;
+          newNode.priority = priority;
+  
+          if (head == null || head.priority < priority) { // Empty or higher priority element at the front
+              newNode.next = head;
+              head = newNode;
+          } else {
+              Node current = head;
+              while (current.next != null && current.next.priority >= priority) {
+                  current = current.next;
+              }
+              newNode.next = current.next;
+              current.next = newNode;
+          }
+      }
+  
+      // Dequeue: Remove and return the element with the highest priority
+      int dequeue() {
+          if (head == null) {
+              throw new Exception("Queue underflow");
+          }
+  
+          int value = head.value;
+          head = head.next;
+          return value;
+      }
+  
+      // Peek: Return the element with the highest priority without removing it
+      int peek() {
+          if (head == null) {
+              return -1; // or throw exception
+          }
+  
+          return head.value;
+      }
+  
+      // isEmpty: Check if the queue is empty
+      boolean isEmpty() {
+          return head == null;
+      }
+  }
+        </pre>
+
+            <h3 class="text-xl font-semibold mb-2">Time Complexity Analysis</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-6">
+              <li><strong>Enqueue:</strong> O(n) — We may need to traverse the entire list to find the correct position
+                to insert the new node.</li>
+              <li><strong>Dequeue:</strong> O(1) — We only need to remove the element at the head, which is always the
+                highest priority.</li>
+              <li><strong>Peek:</strong> O(1) — The highest priority element is always at the head of the list.</li>
+              <li><strong>isEmpty:</strong> O(1) — We only need to check if the head is null.</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mb-2">Advantages of Linked List-Based Priority Queue</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-6">
+              <li><strong>Simple to Implement:</strong> Implementing a priority queue using a linked list is
+                straightforward compared to more complex data structures like heaps.</li>
+              <li><strong>Dynamic Size:</strong> The priority queue can grow dynamically as elements are added, making
+                it useful when the size of the queue is unpredictable.</li>
+              <li><strong>No Wasted Space:</strong> Unlike array-based queues, the linked list implementation doesn’t
+                require a predefined size, eliminating memory waste for unused capacity.</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold mb-2">Disadvantages</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-6">
+              <li><strong>Inefficient Insertion:</strong> Finding the correct position to insert a new element takes
+                O(n) time, making the enqueue operation slower compared to a heap-based priority queue.</li>
+              <li><strong>Memory Overhead:</strong> Each node requires additional memory for the next pointer, making it
+                less memory-efficient than an array-based priority queue.</li>
+              <li><strong>Poor Cache Locality:</strong> Linked lists do not store elements contiguously, which can
+                result in poor cache performance compared to array-based implementations.</li>
+            </ul>
+
+            <p class="text-gray-700">
+              A priority queue implemented by a linked list offers a simple and intuitive approach, with the main
+              advantage being dynamic size and ease of implementation. However, it comes with trade-offs, including
+              inefficient insertion and additional memory overhead. Despite these disadvantages, it is still useful in
+              scenarios where the size of the queue is unpredictable and memory overhead is less of a concern.
+            </p>
+
+            <div class="mt-6 text-center">
+              <a href="PriorityQueue.html"
+                class="inline-block bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition">
+                Go to Visualization
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </main>
+</body>
+
+</html>

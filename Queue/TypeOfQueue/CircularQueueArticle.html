@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circular Queue</title>
+  <link rel="icon" href="../Assets/svg/arrow-rotate-left-svgrepo-com.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="menu.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .vertical-text {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+
+<body class="text-lg leading-relaxed flex flex-col min-h-screen bg-gray-100">
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="index.html" class="text-3xl font-extrabold text-white">QueueViz</a>
+
+      <nav>
+        <ul class="flex space-x-8">
+          <li class="flex flex-col items-start">
+            <a href="Queue.html" class="text-xl font-semibold text-white hover:underline">
+              Queue
+            </a>
+            <a href="QueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="PriorityQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Priority Queue
+            </a>
+            <a href="PriorityQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Priority Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Deque.html" class="text-xl font-semibold text-white hover:underline">
+              Deque
+            </a>
+            <a href="DequeArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Deque Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="CircularQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Circular Queue
+            </a>
+            <a href="CircularQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Circular Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="LockFreeQueue.html" class="text-xl font-semibold text-white hover:underline">
+              Lock Free Queue
+            </a>
+            <a href="Lock‑FreeQueueArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Lock Free Queue Article
+            </a>
+          </li>
+          <li class="flex flex-col items-start">
+            <a href="Multi-LevelFeedback.html" class="text-xl font-semibold text-white hover:underline">
+              Multi-Level Feedback Queue
+            </a>
+            <a href="Multi‑LevelFeedbackArticle.html" class="text-sm text-indigo-200 hover:underline mt-1">
+              Multi-Level Feedback Queue Article
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="flex items-center justify-center h-20">
+    <h1 class="text-4xl font-bold text-gray-800">Lock‑Free Queue</h1>
+  </div>
+
+  <main class="flex-1 overflow-y-auto container mx-auto px-6 py-8">
+    <section class="bg-white rounded-lg shadow p-6 mb-8">
+      <div class="flex items-center mb-4">
+        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+          <img src="../Assets/svg/chart-svgrepo-com.svg" alt="Chart Icon" class="w-8 h-8">
+        </div>
+        <h2 class="text-2xl font-semibold text-gray-800">Overview</h2>
+      </div>
+      <p class="text-gray-700 leading-relaxed">
+        A circular queue—also known as a ring buffer—is a bounded, array-based queue...
+      </p>
+
+      <h3 class="text-xl font-semibold mb-2">Why Use a Circular Queue?</h3>
+      <ul class="list-disc list-inside text-gray-700 mb-6">
+        <li>
+          <strong>Efficient Memory Reuse:</strong> By reusing slots vacated by dequeued elements, a circular queue
+          avoids wasted space and shifting overhead. Every enqueue and dequeue simply advances one of two pointers,
+          keeping all operations in constant time.
+        </li>
+        <li>
+          <strong>Predictable, Bounded Capacity:</strong> In embedded or real‑time systems—such as audio buffers,
+          network packet queues, or hardware interrupt handling—memory must be tightly controlled. A circular queue’s
+          fixed size guarantees you won’t exceed available storage, and its wrap‑around behavior maximizes utilization
+          of that space.
+        </li>
+        <li>
+          <strong>Minimal Overhead:</strong> There’s no need for dynamic memory allocation after initialization. Once
+          the buffer is allocated, all operations are pointer arithmetic and array access, which is extremely fast and
+          cache‑friendly—ideal for high‑throughput or low‑latency applications.
+        </li>
+        <li>
+          <strong>Simplicity in Concurrency:</strong> In many producer‑consumer scenarios, a circular queue can be
+          implemented as a lock‑free structure by using atomic index updates, providing thread‑safe buffering without
+          heavy locking.
+        </li>
+      </ul>
+
+      <h3 class="text-xl font-semibold mb-2">What Is a Circular Queue?</h3>
+      <p class="text-gray-700">
+        At its core, a circular queue maintains three key pieces of state:
+      </p>
+      <ul class="list-disc list-inside text-gray-700">
+        <li>A fixed‑size array to hold elements.</li>
+        <li>A head index pointing to the next element to dequeue.</li>
+        <li>A tail index pointing to the slot where the next enqueue will store its value.</li>
+      </ul>
+      <p class="text-gray-700 mt-4">
+        When the tail reaches the end of the array, it wraps back to index 0; likewise, the head wraps around when it
+        moves past the last element. Empty and full conditions are distinguished—typically by keeping a separate count
+        of elements or by reserving one unused slot—so the data structure knows when it can or cannot accept new items.
+        The result is a lean, robust queue implementation with all core operations (enqueue, dequeue, peek, isEmpty,
+        isFull) guaranteed to run in constant time and to maximize the use of its allocated buffer.
+      </p>
+      <div class="flex justify-center space-x-4">
+        <div class="w-64 h-26 overflow-hidden">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdtyPE47L5wJMv9xhot1ukMp04FE3DMar8A&s"
+            alt="Circular Queue Illustration" class="w-full h-full object-cover object-center" />
+        </div>
+        <div class="w-64 h-26 overflow-hidden">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq758QCp90oCZRPOKJWENcgpmrmmjKGIMrMA&s"
+            alt="Circular Queue Illustration" class="w-full h-full object-cover object-center" />
+        </div>
+      </section>
+
+
+      <div class="mt-6 bg-white rounded-lg shadow p-4 flex items-start">
+        <div class="flex-1 p-6 overflow-visible">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              <img src="../Assets/svg/design-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+            </div>
+            <h2 class="text-xl font-semibold">History of Circular Queue and Use cases</h2>
+          </div>
+          <p class="text-gray-700 mb-6">
+            The concept of a queue has existed in computing since the early days of computer science, forming the basis
+            of many scheduling and task management systems. The circular queue, a more specialized type of queue,
+            emerged to address the limitations of traditional linear queues, particularly in systems with fixed memory
+            sizes or real‑time applications.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">Early Queue Concepts</h3>
+          <p class="text-gray-700 mb-4">
+            The queue data structure was formalized in the 1950s and 1960s alongside the development of early computer
+            systems. It was initially used in batch processing systems, where jobs were queued up and processed in
+            order. Simple FIFO (First In, First Out) queues were enough for these early applications, which processed
+            jobs one by one.
+          </p>
+          <p class="text-gray-700 mb-4">
+            However, as computer systems evolved, certain limitations of the basic queue became evident. Specifically,
+            when queues were implemented using static arrays, they faced the issue of unused memory after elements were
+            dequeued. The elements that were removed from the front of the queue left gaps, and once the rear pointer
+            reached the end of the array, no more elements could be added even if there was empty space at the beginning
+            of the array.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">The Emergence of Circular Queues</h3>
+          <p class="text-gray-700 mb-4">
+            In the 1970s, as memory efficiency became more important in real‑time and embedded systems, the circular
+            queue was introduced to solve this issue. The circular queue was developed to address the inefficiencies of
+            traditional queues by enabling the reuse of the array’s storage. The concept is simple: when the rear
+            pointer reaches the end of the array, it wraps around to the beginning, filling up any empty space left by
+            dequeued elements.
+          </p>
+          <p class="text-gray-700 mb-4">
+            The circular queue became a valuable tool in systems with fixed memory limits or those requiring real‑time
+            data processing. Its ability to handle continuous data streams (such as audio buffers, network packets, or
+            hardware interrupts) made it particularly useful in early telecommunications and real‑time operating systems
+            (RTOS). Circular buffers are now widely used in situations where buffer overflow and underflow are critical
+            concerns.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">Practical Adoption and Modern Use</h3>
+          <p class="text-gray-700 mb-4">
+            Since its introduction, the circular queue has found applications in many fields, particularly in streaming
+            data and buffer management. It is a foundational concept in areas like:
+          </p>
+          <ul class="list-disc list-inside text-gray-700 mb-4">
+            <li><strong>Network Routers:</strong> Buffers for packet queuing to handle network traffic.</li>
+            <li><strong>Audio/Video Streaming:</strong> Buffers that continuously handle real‑time data without memory
+              wastage.</li>
+            <li><strong>Embedded Systems:</strong> Where fixed-size memory is a constraint, such as in sensors,
+              hardware, or communication modules.</li>
+            <li><strong>Operating System Scheduling:</strong> Queues for task management in systems with limited memory
+              resources.</li>
+          </ul>
+
+          <p class="text-gray-700">
+            The circular queue was a natural evolution of the basic queue structure, introduced to address memory
+            efficiency issues in early computing systems. Its ability to maintain continuous operations while making
+            full use of available memory has made it a core data structure in a variety of fields, especially in
+            real‑time and embedded system design.
+          </p>
+
+        </div>
+      </div>
+
+
+      <div class="mt-6 bg-white rounded-lg shadow p-4 flex items-start">
+        <div class="flex-1 p-6 overflow-visible">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              <img src="../Assets/svg/repair-svgrepo-com.svg" alt="Deque Icon" class="w-8 h-8">
+            </div>
+            <h2 class="text-xl font-semibold">Circular Queue Implemented by Linked List</h2>
+          </div>
+          <p class="text-gray-700 mb-6">
+            A circular queue implemented using a linked list is a variation of the basic queue data structure where the
+            last node in the queue points back to the first node, creating a circular structure. This means the queue
+            can use all available memory without running into the problem of unused space that happens in an array-based
+            circular queue.
+          </p>
+
+          <h3 class="text-xl font-semibold mb-2">Structure of a Circular Queue Implemented by Linked List</h3>
+          <p class="text-gray-700 mb-4">
+            A circular queue implemented by a linked list uses two pointers to track the front and rear of the queue:
+          </p>
+          <ul class="list-disc list-inside text-gray-700 mb-4">
+            <li><strong>Head (Front):</strong> Points to the first node in the queue.</li>
+            <li><strong>Tail (Rear):</strong> Points to the last node in the queue.</li>
+            <li>The <strong>tail.next</strong> pointer will reference the head node to create the circular structure.
+            </li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Key Operations</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-4">
+            <li><strong>Enqueue (Add to rear):</strong> Adds a new node to the queue and adjusts the
+              <strong>tail.next</strong> to point to the head to maintain circularity.</li>
+            <li><strong>Dequeue (Remove from front):</strong> Removes the node pointed to by head and adjusts the head
+              to point to the next node, maintaining the circular structure.</li>
+            <li><strong>Peek (Front element):</strong> Returns the value of the node pointed to by head without removing
+              it.</li>
+            <li><strong>isEmpty (Check if empty):</strong> Returns true if the head is null (empty queue), otherwise
+              returns false.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Java Pseudocode Example</h3>
+          <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono mb-4">
+class CircularQueue {
+    Node head = null; 
+    Node tail = null;
+
+    class Node {
+        int value;
+        Node next;
+    }
+
+    void enqueue(int value) {
+        Node newNode = new Node();
+        newNode.value = value;
+        
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            newNode.next = head;  
+        } else {
+            tail.next = newNode;
+            tail = newNode;
+            tail.next = head;  
+        }
+    }
+
+    int dequeue() {
+        if (head == null) throw new Exception("Queue underflow");
+        
+        int value = head.value;
+        
+        if (head == tail) {
+            head = null;
+            tail = null;
+        } else {
+            head = head.next;
+            tail.next = head;  // Maintain circularity
+        }
+        
+        return value;
+    }
+
+    int peek() {
+        if (head == null) return -1;  // Or throw exception
+        return head.value;
+    }
+
+    boolean isEmpty() {
+        return head == null;
+    }
+}
+      </pre>
+
+          <h3 class="text-xl font-semibold mb-2">Advantages of Circular Linked List Queue</h3>
+          <ul class="list-disc list-inside text-gray-700 mb-4">
+            <li><strong>Efficient Memory Usage:</strong> No wasted space as nodes are dynamically allocated and reused.
+            </li>
+            <li><strong>Dynamic Size:</strong> Can dynamically grow and shrink as needed, offering flexible memory
+              management.</li>
+            <li><strong>No Wasted Space:</strong> Circular structure ensures continuous use of memory, even after
+              dequeuing elements.</li>
+          </ul>
+
+          <h3 class="text-xl font-semibold mb-2">Disadvantages</h3>
+          <ul class="list-disc list-inside text-gray-700">
+            <li><strong>Pointer Overhead:</strong> Each node requires additional memory for the pointer.</li>
+            <li><strong>Complexity:</strong> Maintaining the circular nature requires careful pointer management, which
+              could lead to errors if not implemented properly.</li>
+          </ul>
+
+          <p class="text-gray-700 mt-4">
+            In summary, a circular linked‑list queue is a powerful variation of the standard queue that ensures
+            continuous, efficient memory usage and supports dynamic growth. It is particularly useful for applications
+            requiring real-time data management, where efficient memory handling and the avoidance of unnecessary data
+            movement are key concerns.
+          </p>
+
+          <div class="text-center mt-8">
+            <a href="CircularQueue.html"
+              class="inline-block bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow hover:bg-blue-700 transition">
+              Go to Visualization
+            </a>
+          </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.nav-item.dropdown').forEach(item => {
+      const btn = item.querySelector('.nav-link');
+      const menu = item.querySelector('.dropdown-menu');
+      btn.addEventListener('mouseover', () => {
+        menu.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+      });
+      item.addEventListener('mouseleave', () => {
+        menu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+      });
+    });
+  </script>
+  </div>
+  </div>
+
+  </main>
+</body>
+
+</html>
